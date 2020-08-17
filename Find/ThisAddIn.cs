@@ -10,7 +10,7 @@ namespace Find
 
         private void VisibleChanged(object sender, System.EventArgs e)
         {
-            Globals.Ribbons.FindRibbon.toggleButton1.Checked = customFindTaskPane.Visible;
+            Globals.Ribbons.FindRibbon.FindPane_ToggleButton.Checked = customFindTaskPane.Visible;
         }
 
         public CustomTaskPane TaskPane

@@ -13,7 +13,7 @@ namespace Find
 
         }
 
-        private void toggleButton1_Click(object sender, RibbonControlEventArgs e)
+        private void FindPane_ToggleButton_Click(object sender, RibbonControlEventArgs e)
         {
             Globals.ThisAddIn.TaskPane.Visible = ((RibbonToggleButton)sender).Checked;
         }

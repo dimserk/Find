@@ -36,7 +36,7 @@
         {
             this.tab1 = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
-            this.toggleButton1 = this.Factory.CreateRibbonToggleButton();
+            this.FindPane_ToggleButton = this.Factory.CreateRibbonToggleButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -50,15 +50,15 @@
             // 
             // group1
             // 
-            this.group1.Items.Add(this.toggleButton1);
+            this.group1.Items.Add(this.FindPane_ToggleButton);
             this.group1.Label = "Меню поиска";
             this.group1.Name = "group1";
             // 
-            // toggleButton1
+            // FindPane_ToggleButton
             // 
-            this.toggleButton1.Label = "Показать вкладку поиска";
-            this.toggleButton1.Name = "toggleButton1";
-            this.toggleButton1.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.toggleButton1_Click);
+            this.FindPane_ToggleButton.Label = "Показать вкладку поиска";
+            this.FindPane_ToggleButton.Name = "FindPane_ToggleButton";
+            this.FindPane_ToggleButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.FindPane_ToggleButton_Click);
             // 
             // FindRibbon
             // 
@@ -78,7 +78,7 @@
 
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tab1;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
-        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton toggleButton1;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton FindPane_ToggleButton;
     }
 
     partial class ThisRibbonCollection
