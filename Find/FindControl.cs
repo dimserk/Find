@@ -51,6 +51,12 @@ namespace Find
                 Search_button_Click(sender, e);
             }
         }
-        
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var wb = App.ActiveWorkbook;
+            wb.SaveCopyAs(@"C:\Book_test.xlsx");
+        }
+
     }
 }
