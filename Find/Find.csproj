@@ -163,11 +163,20 @@
     <Compile Include="FindControl.Designer.cs">
       <DependentUpon>FindControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="FindRibbon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FindRibbon.Designer.cs">
+      <DependentUpon>FindRibbon.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="FindControl.resx">
       <DependentUpon>FindControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindRibbon.resx">
+      <DependentUpon>FindRibbon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
