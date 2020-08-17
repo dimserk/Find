@@ -52,10 +52,23 @@ namespace Find
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void SaveBook_Button_Click(object sender, EventArgs e)
         {
             var wb = App.ActiveWorkbook;
-            wb.SaveCopyAs(@"C:\Book_test.xlsx");
+            string fileName = String.Empty;
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "xls files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+             {
+                fileName = saveFileDialog1.FileName;
+             }
+            else
+                return;
+            // сохраняем Workbook
+            wb.SaveAs(fileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            saveFileDialog1.Dispose();
         }
     }
 }

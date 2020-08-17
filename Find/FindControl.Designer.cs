@@ -157,7 +157,6 @@
             // SaveBook_Button
             // 
             this.SaveBook_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.SaveBook_Button.Enabled = false;
             this.SaveBook_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.SaveBook_Button.Location = new System.Drawing.Point(233, 7);
             this.SaveBook_Button.Name = "SaveBook_Button";
@@ -165,7 +164,7 @@
             this.SaveBook_Button.TabIndex = 4;
             this.SaveBook_Button.Text = "Сохранить как\r\nкнигу";
             this.SaveBook_Button.UseVisualStyleBackColor = true;
-            this.SaveBook_Button.Click += new System.EventHandler(this.button1_Click);
+            this.SaveBook_Button.Click += new System.EventHandler(this.SaveBook_Button_Click);
             // 
             // TableLayout_Search
             // 
@@ -248,6 +247,5 @@
         private System.Windows.Forms.Button Search_Button;
         private System.Windows.Forms.Button Clarify_Button;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Button button1;
     }
 }
