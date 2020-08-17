@@ -8,11 +8,24 @@ namespace Find
         private FindControl findControl;
         private CustomTaskPane customFindTaskPane;
 
+        private void VisibleChanged(object sender, System.EventArgs e)
+        {
+            Globals.Ribbons.FindRibbon.FindPane_ToggleButton.Checked = customFindTaskPane.Visible;
+        }
+
+        public CustomTaskPane TaskPane
+        {
+            get
+            {
+                return customFindTaskPane;
+            }
+        }
+
         private void ThisAddIn_Startup(object sender, EventArgs e)
         {
             findControl = new FindControl();
             customFindTaskPane = this.CustomTaskPanes.Add(findControl, "Поиск");
-            customFindTaskPane.Visible = true;
+            customFindTaskPane.VisibleChanged += new EventHandler(VisibleChanged);
         }
 
         private void ThisAddIn_Shutdown(object sender, EventArgs e)

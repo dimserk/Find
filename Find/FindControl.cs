@@ -51,6 +51,5 @@ namespace Find
                 Search_button_Click(sender, e);
             }
         }
-        
     }
 }
