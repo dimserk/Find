@@ -17,6 +17,7 @@ namespace Find
 
         private void ThisAddIn_Shutdown(object sender, EventArgs e)
         {
+
         }
 
         #region Код, автоматически созданный VSTO
