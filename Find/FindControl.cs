@@ -70,5 +70,20 @@ namespace Find
             wb.SaveAs(fileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
             saveFileDialog1.Dispose();
         }
+
+        private void SaveSheet_Button_Click(object sender, EventArgs e)
+        {
+            var xlSheets = App.ActiveWorkbook.Sheets;
+            int count = App.ActiveWorkbook.Sheets.Count;
+            var activeSheet = (Worksheet)App.ActiveSheet;
+
+            var xlNewSheet = (Excel.Worksheet)xlSheets.Add(Type.Missing, activeSheet, Type.Missing, Type.Missing);  // добавляет лист после активного
+            // var xlNewSheet = (Excel.Worksheet)xlSheets.Add(xlSheets[1], Type.Missing, Type.Missing, Type.Missing); // добавляет лист в самом начале
+            // var xlNewSheet = (Excel.Worksheet)xlSheets.Add(Type.Missing, xlSheets[count], Type.Missing, Type.Missing); // добавляет лист в самом конце
+
+            // xlNewSheet.Name = "newsheet";  // название листа, который добавили
+
+            activeSheet.Cells[1, 1] = count;
+        }
     }
 }

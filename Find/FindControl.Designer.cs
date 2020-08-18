@@ -145,7 +145,6 @@
             // SaveSheet_Button
             // 
             this.SaveSheet_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.SaveSheet_Button.Enabled = false;
             this.SaveSheet_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.SaveSheet_Button.Location = new System.Drawing.Point(41, 7);
             this.SaveSheet_Button.Name = "SaveSheet_Button";
@@ -153,6 +152,7 @@
             this.SaveSheet_Button.TabIndex = 3;
             this.SaveSheet_Button.Text = "Сохранить как\r\nлист";
             this.SaveSheet_Button.UseVisualStyleBackColor = true;
+            this.SaveSheet_Button.Click += new System.EventHandler(this.SaveSheet_Button_Click);
             // 
             // SaveBook_Button
             // 
@@ -185,9 +185,9 @@
             // 
             this.Search_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Search_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Search_Button.Location = new System.Drawing.Point(41, 7);
+            this.Search_Button.Location = new System.Drawing.Point(41, 13);
             this.Search_Button.Name = "Search_Button";
-            this.Search_Button.Size = new System.Drawing.Size(110, 40);
+            this.Search_Button.Size = new System.Drawing.Size(110, 28);
             this.Search_Button.TabIndex = 1;
             this.Search_Button.Text = "Найти!";
             this.Search_Button.UseVisualStyleBackColor = true;
@@ -198,9 +198,9 @@
             this.Clarify_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Clarify_Button.Enabled = false;
             this.Clarify_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Clarify_Button.Location = new System.Drawing.Point(233, 7);
+            this.Clarify_Button.Location = new System.Drawing.Point(233, 13);
             this.Clarify_Button.Name = "Clarify_Button";
-            this.Clarify_Button.Size = new System.Drawing.Size(110, 40);
+            this.Clarify_Button.Size = new System.Drawing.Size(110, 28);
             this.Clarify_Button.TabIndex = 2;
             this.Clarify_Button.Text = "Уточнить";
             this.Clarify_Button.UseVisualStyleBackColor = true;
