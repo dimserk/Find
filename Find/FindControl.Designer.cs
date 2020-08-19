@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             this.TableLayout_Main = new System.Windows.Forms.TableLayoutPanel();
-            this.Search_TextBox = new System.Windows.Forms.TextBox();
+            this.SearchTextBox = new System.Windows.Forms.TextBox();
             this.SearchOption_GroupBox = new System.Windows.Forms.GroupBox();
-            this.Case_CheckBox = new System.Windows.Forms.CheckBox();
-            this.Reverse_CheckBox = new System.Windows.Forms.CheckBox();
-            this.SearchOrder_CheckBox = new System.Windows.Forms.CheckBox();
+            this.SMTH_CheckBox = new System.Windows.Forms.CheckBox();
+            this.CaseCheckBox = new System.Windows.Forms.CheckBox();
+            this.WorkbookCheckBox = new System.Windows.Forms.CheckBox();
             this.TableLayout_Save = new System.Windows.Forms.TableLayoutPanel();
-            this.SaveSheet_Button = new System.Windows.Forms.Button();
-            this.SaveBook_Button = new System.Windows.Forms.Button();
+            this.SaveSheetButton = new System.Windows.Forms.Button();
+            this.SaveBookButton = new System.Windows.Forms.Button();
             this.TableLayout_Search = new System.Windows.Forms.TableLayoutPanel();
             this.Search_Button = new System.Windows.Forms.Button();
-            this.Clarify_Button = new System.Windows.Forms.Button();
-            this.Cells_ListBox = new System.Windows.Forms.ListBox();
+            this.ClarifyButton = new System.Windows.Forms.Button();
+            this.CellsListBox = new System.Windows.Forms.ListBox();
             this.TableLayout_Main.SuspendLayout();
             this.SearchOption_GroupBox.SuspendLayout();
             this.TableLayout_Save.SuspendLayout();
@@ -51,120 +51,130 @@
             // 
             this.TableLayout_Main.ColumnCount = 1;
             this.TableLayout_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.TableLayout_Main.Controls.Add(this.Search_TextBox, 0, 0);
+            this.TableLayout_Main.Controls.Add(this.SearchTextBox, 0, 0);
             this.TableLayout_Main.Controls.Add(this.SearchOption_GroupBox, 0, 2);
             this.TableLayout_Main.Controls.Add(this.TableLayout_Save, 0, 3);
             this.TableLayout_Main.Controls.Add(this.TableLayout_Search, 0, 1);
-            this.TableLayout_Main.Controls.Add(this.Cells_ListBox, 0, 4);
+            this.TableLayout_Main.Controls.Add(this.CellsListBox, 0, 4);
             this.TableLayout_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TableLayout_Main.Location = new System.Drawing.Point(0, 0);
+            this.TableLayout_Main.Margin = new System.Windows.Forms.Padding(6);
             this.TableLayout_Main.Name = "TableLayout_Main";
             this.TableLayout_Main.RowCount = 5;
             this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 115F));
             this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 115F));
             this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.TableLayout_Main.Size = new System.Drawing.Size(391, 529);
+            this.TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            this.TableLayout_Main.Size = new System.Drawing.Size(782, 1017);
             this.TableLayout_Main.TabIndex = 0;
             // 
-            // Search_TextBox
+            // SearchTextBox
             // 
-            this.Search_TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.SearchTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Search_TextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Search_TextBox.Location = new System.Drawing.Point(3, 3);
-            this.Search_TextBox.Name = "Search_TextBox";
-            this.Search_TextBox.Size = new System.Drawing.Size(385, 26);
-            this.Search_TextBox.TabIndex = 0;
-            this.Search_TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Search_TextBox_KeyPress);
+            this.SearchTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SearchTextBox.Location = new System.Drawing.Point(6, 6);
+            this.SearchTextBox.Margin = new System.Windows.Forms.Padding(6);
+            this.SearchTextBox.Name = "SearchTextBox";
+            this.SearchTextBox.Size = new System.Drawing.Size(770, 44);
+            this.SearchTextBox.TabIndex = 0;
+            this.SearchTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Search_TextBox_KeyPress);
             // 
             // SearchOption_GroupBox
             // 
             this.SearchOption_GroupBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.SearchOption_GroupBox.Controls.Add(this.Case_CheckBox);
-            this.SearchOption_GroupBox.Controls.Add(this.Reverse_CheckBox);
-            this.SearchOption_GroupBox.Controls.Add(this.SearchOrder_CheckBox);
+            this.SearchOption_GroupBox.Controls.Add(this.SMTH_CheckBox);
+            this.SearchOption_GroupBox.Controls.Add(this.CaseCheckBox);
+            this.SearchOption_GroupBox.Controls.Add(this.WorkbookCheckBox);
             this.SearchOption_GroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SearchOption_GroupBox.Location = new System.Drawing.Point(114, 95);
+            this.SearchOption_GroupBox.Location = new System.Drawing.Point(209, 177);
+            this.SearchOption_GroupBox.Margin = new System.Windows.Forms.Padding(6);
             this.SearchOption_GroupBox.Name = "SearchOption_GroupBox";
-            this.SearchOption_GroupBox.Size = new System.Drawing.Size(163, 123);
+            this.SearchOption_GroupBox.Padding = new System.Windows.Forms.Padding(6);
+            this.SearchOption_GroupBox.Size = new System.Drawing.Size(364, 237);
             this.SearchOption_GroupBox.TabIndex = 6;
             this.SearchOption_GroupBox.TabStop = false;
             this.SearchOption_GroupBox.Text = "Параметры поиска";
             // 
-            // Case_CheckBox
+            // SMTH_CheckBox
             // 
-            this.Case_CheckBox.AutoSize = true;
-            this.Case_CheckBox.Location = new System.Drawing.Point(6, 90);
-            this.Case_CheckBox.Name = "Case_CheckBox";
-            this.Case_CheckBox.Size = new System.Drawing.Size(153, 20);
-            this.Case_CheckBox.TabIndex = 4;
-            this.Case_CheckBox.TabStop = false;
-            this.Case_CheckBox.Text = "Учитывать регистр";
-            this.Case_CheckBox.UseVisualStyleBackColor = true;
+            this.SMTH_CheckBox.AutoSize = true;
+            this.SMTH_CheckBox.Location = new System.Drawing.Point(12, 173);
+            this.SMTH_CheckBox.Margin = new System.Windows.Forms.Padding(6);
+            this.SMTH_CheckBox.Name = "SMTH_CheckBox";
+            this.SMTH_CheckBox.Size = new System.Drawing.Size(275, 34);
+            this.SMTH_CheckBox.TabIndex = 4;
+            this.SMTH_CheckBox.TabStop = false;
+            this.SMTH_CheckBox.Text = "Учитывать регистр";
+            this.SMTH_CheckBox.UseVisualStyleBackColor = true;
             // 
-            // Reverse_CheckBox
+            // CaseCheckBox
             // 
-            this.Reverse_CheckBox.AutoSize = true;
-            this.Reverse_CheckBox.Location = new System.Drawing.Point(6, 48);
-            this.Reverse_CheckBox.Name = "Reverse_CheckBox";
-            this.Reverse_CheckBox.Size = new System.Drawing.Size(145, 36);
-            this.Reverse_CheckBox.TabIndex = 3;
-            this.Reverse_CheckBox.TabStop = false;
-            this.Reverse_CheckBox.Text = "Поиск в обратном\r\nнаправлении";
-            this.Reverse_CheckBox.UseVisualStyleBackColor = true;
+            this.CaseCheckBox.AutoSize = true;
+            this.CaseCheckBox.Location = new System.Drawing.Point(12, 92);
+            this.CaseCheckBox.Margin = new System.Windows.Forms.Padding(6);
+            this.CaseCheckBox.Name = "CaseCheckBox";
+            this.CaseCheckBox.Size = new System.Drawing.Size(275, 34);
+            this.CaseCheckBox.TabIndex = 3;
+            this.CaseCheckBox.TabStop = false;
+            this.CaseCheckBox.Text = "Учитывать регистр";
+            this.CaseCheckBox.UseVisualStyleBackColor = true;
             // 
-            // SearchOrder_CheckBox
+            // WorkbookCheckBox
             // 
-            this.SearchOrder_CheckBox.AutoSize = true;
-            this.SearchOrder_CheckBox.Location = new System.Drawing.Point(6, 22);
-            this.SearchOrder_CheckBox.Name = "SearchOrder_CheckBox";
-            this.SearchOrder_CheckBox.Size = new System.Drawing.Size(158, 20);
-            this.SearchOrder_CheckBox.TabIndex = 2;
-            this.SearchOrder_CheckBox.TabStop = false;
-            this.SearchOrder_CheckBox.Text = "Искать по столбцам";
-            this.SearchOrder_CheckBox.UseVisualStyleBackColor = true;
+            this.WorkbookCheckBox.AutoSize = true;
+            this.WorkbookCheckBox.Location = new System.Drawing.Point(12, 42);
+            this.WorkbookCheckBox.Margin = new System.Windows.Forms.Padding(6);
+            this.WorkbookCheckBox.Name = "WorkbookCheckBox";
+            this.WorkbookCheckBox.Size = new System.Drawing.Size(327, 34);
+            this.WorkbookCheckBox.TabIndex = 2;
+            this.WorkbookCheckBox.TabStop = false;
+            this.WorkbookCheckBox.Text = "Искать по всем листам";
+            this.WorkbookCheckBox.UseVisualStyleBackColor = true;
             // 
             // TableLayout_Save
             // 
             this.TableLayout_Save.ColumnCount = 2;
             this.TableLayout_Save.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TableLayout_Save.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TableLayout_Save.Controls.Add(this.SaveSheet_Button, 0, 0);
-            this.TableLayout_Save.Controls.Add(this.SaveBook_Button, 1, 0);
+            this.TableLayout_Save.Controls.Add(this.SaveSheetButton, 0, 0);
+            this.TableLayout_Save.Controls.Add(this.SaveBookButton, 1, 0);
             this.TableLayout_Save.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TableLayout_Save.Location = new System.Drawing.Point(3, 224);
+            this.TableLayout_Save.Location = new System.Drawing.Point(6, 426);
+            this.TableLayout_Save.Margin = new System.Windows.Forms.Padding(6);
             this.TableLayout_Save.Name = "TableLayout_Save";
             this.TableLayout_Save.RowCount = 1;
             this.TableLayout_Save.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TableLayout_Save.Size = new System.Drawing.Size(385, 54);
+            this.TableLayout_Save.Size = new System.Drawing.Size(770, 103);
             this.TableLayout_Save.TabIndex = 7;
             // 
             // SaveSheet_Button
             // 
-            this.SaveSheet_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.SaveSheet_Button.Enabled = false;
-            this.SaveSheet_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SaveSheet_Button.Location = new System.Drawing.Point(41, 7);
-            this.SaveSheet_Button.Name = "SaveSheet_Button";
-            this.SaveSheet_Button.Size = new System.Drawing.Size(110, 40);
-            this.SaveSheet_Button.TabIndex = 3;
-            this.SaveSheet_Button.Text = "Сохранить как\r\nлист";
-            this.SaveSheet_Button.UseVisualStyleBackColor = true;
+            this.SaveSheetButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.SaveSheetButton.Enabled = false;
+            this.SaveSheetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SaveSheetButton.Location = new System.Drawing.Point(82, 13);
+            this.SaveSheetButton.Margin = new System.Windows.Forms.Padding(6);
+            this.SaveSheetButton.Name = "SaveSheet_Button";
+            this.SaveSheetButton.Size = new System.Drawing.Size(220, 77);
+            this.SaveSheetButton.TabIndex = 3;
+            this.SaveSheetButton.Text = "Сохранить как\r\nлист";
+            this.SaveSheetButton.UseVisualStyleBackColor = true;
             // 
             // SaveBook_Button
             // 
-            this.SaveBook_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.SaveBook_Button.Enabled = false;
-            this.SaveBook_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SaveBook_Button.Location = new System.Drawing.Point(233, 7);
-            this.SaveBook_Button.Name = "SaveBook_Button";
-            this.SaveBook_Button.Size = new System.Drawing.Size(111, 40);
-            this.SaveBook_Button.TabIndex = 4;
-            this.SaveBook_Button.Text = "Сохранить как\r\nкнигу";
-            this.SaveBook_Button.UseVisualStyleBackColor = true;
+            this.SaveBookButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.SaveBookButton.Enabled = false;
+            this.SaveBookButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SaveBookButton.Location = new System.Drawing.Point(466, 13);
+            this.SaveBookButton.Margin = new System.Windows.Forms.Padding(6);
+            this.SaveBookButton.Name = "SaveBook_Button";
+            this.SaveBookButton.Size = new System.Drawing.Size(222, 77);
+            this.SaveBookButton.TabIndex = 4;
+            this.SaveBookButton.Text = "Сохранить как\r\nкнигу";
+            this.SaveBookButton.UseVisualStyleBackColor = true;
             // 
             // TableLayout_Search
             // 
@@ -172,55 +182,62 @@
             this.TableLayout_Search.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TableLayout_Search.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TableLayout_Search.Controls.Add(this.Search_Button, 0, 0);
-            this.TableLayout_Search.Controls.Add(this.Clarify_Button, 1, 0);
+            this.TableLayout_Search.Controls.Add(this.ClarifyButton, 1, 0);
             this.TableLayout_Search.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TableLayout_Search.Location = new System.Drawing.Point(3, 35);
+            this.TableLayout_Search.Location = new System.Drawing.Point(6, 62);
+            this.TableLayout_Search.Margin = new System.Windows.Forms.Padding(6);
             this.TableLayout_Search.Name = "TableLayout_Search";
             this.TableLayout_Search.RowCount = 1;
             this.TableLayout_Search.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TableLayout_Search.Size = new System.Drawing.Size(385, 54);
+            this.TableLayout_Search.Size = new System.Drawing.Size(770, 103);
             this.TableLayout_Search.TabIndex = 9;
             // 
             // Search_Button
             // 
             this.Search_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Search_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Search_Button.Location = new System.Drawing.Point(41, 7);
+            this.Search_Button.Location = new System.Drawing.Point(82, 13);
+            this.Search_Button.Margin = new System.Windows.Forms.Padding(6);
             this.Search_Button.Name = "Search_Button";
-            this.Search_Button.Size = new System.Drawing.Size(110, 40);
+            this.Search_Button.Size = new System.Drawing.Size(220, 77);
             this.Search_Button.TabIndex = 1;
             this.Search_Button.Text = "Найти!";
             this.Search_Button.UseVisualStyleBackColor = true;
-            this.Search_Button.Click += new System.EventHandler(this.Search_button_Click);
+            this.Search_Button.Click += new System.EventHandler(this.Search_Button_Click);
             // 
             // Clarify_Button
             // 
-            this.Clarify_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.Clarify_Button.Enabled = false;
-            this.Clarify_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Clarify_Button.Location = new System.Drawing.Point(233, 7);
-            this.Clarify_Button.Name = "Clarify_Button";
-            this.Clarify_Button.Size = new System.Drawing.Size(110, 40);
-            this.Clarify_Button.TabIndex = 2;
-            this.Clarify_Button.Text = "Уточнить";
-            this.Clarify_Button.UseVisualStyleBackColor = true;
+            this.ClarifyButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ClarifyButton.Enabled = false;
+            this.ClarifyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ClarifyButton.Location = new System.Drawing.Point(467, 13);
+            this.ClarifyButton.Margin = new System.Windows.Forms.Padding(6);
+            this.ClarifyButton.Name = "Clarify_Button";
+            this.ClarifyButton.Size = new System.Drawing.Size(220, 77);
+            this.ClarifyButton.TabIndex = 2;
+            this.ClarifyButton.Text = "Уточнить";
+            this.ClarifyButton.UseVisualStyleBackColor = true;
+            this.ClarifyButton.Click += new System.EventHandler(this.Clarify_Button_Click);
             // 
-            // Cells_ListBox
+            // CellsListBox
             // 
-            this.Cells_ListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Cells_ListBox.FormattingEnabled = true;
-            this.Cells_ListBox.Location = new System.Drawing.Point(3, 284);
-            this.Cells_ListBox.Name = "Cells_ListBox";
-            this.Cells_ListBox.Size = new System.Drawing.Size(385, 242);
-            this.Cells_ListBox.TabIndex = 10;
+            this.CellsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CellsListBox.FormattingEnabled = true;
+            this.CellsListBox.ItemHeight = 25;
+            this.CellsListBox.Location = new System.Drawing.Point(6, 541);
+            this.CellsListBox.Margin = new System.Windows.Forms.Padding(6);
+            this.CellsListBox.Name = "CellsListBox";
+            this.CellsListBox.Size = new System.Drawing.Size(770, 470);
+            this.CellsListBox.TabIndex = 10;
             // 
             // FindControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.TableLayout_Main);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "FindControl";
-            this.Size = new System.Drawing.Size(391, 529);
+            this.Size = new System.Drawing.Size(782, 1017);
             this.TableLayout_Main.ResumeLayout(false);
             this.TableLayout_Main.PerformLayout();
             this.SearchOption_GroupBox.ResumeLayout(false);
@@ -234,17 +251,17 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel TableLayout_Main;
-        private System.Windows.Forms.TextBox Search_TextBox;
+        private System.Windows.Forms.TextBox SearchTextBox;
         private System.Windows.Forms.GroupBox SearchOption_GroupBox;
-        private System.Windows.Forms.CheckBox Case_CheckBox;
-        private System.Windows.Forms.CheckBox Reverse_CheckBox;
-        private System.Windows.Forms.CheckBox SearchOrder_CheckBox;
+        private System.Windows.Forms.CheckBox SMTH_CheckBox;
+        private System.Windows.Forms.CheckBox CaseCheckBox;
+        private System.Windows.Forms.CheckBox WorkbookCheckBox;
         private System.Windows.Forms.TableLayoutPanel TableLayout_Save;
-        private System.Windows.Forms.Button SaveSheet_Button;
-        private System.Windows.Forms.Button SaveBook_Button;
+        private System.Windows.Forms.Button SaveSheetButton;
+        private System.Windows.Forms.Button SaveBookButton;
         private System.Windows.Forms.TableLayoutPanel TableLayout_Search;
         private System.Windows.Forms.Button Search_Button;
-        private System.Windows.Forms.Button Clarify_Button;
-        private System.Windows.Forms.ListBox Cells_ListBox;
+        private System.Windows.Forms.Button ClarifyButton;
+        private System.Windows.Forms.ListBox CellsListBox;
     }
 }
