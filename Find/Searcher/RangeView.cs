@@ -31,7 +31,7 @@ namespace Find
 
         public override string ToString()
         {
-            return $"{this.FoundRange.Worksheet.Name}-{this.FoundRange.Address.Replace("$", "")}\t=>\t{this.FoundRange.Text}";
+            return $"{this.SheetName}-{this.FoundRange.Address}";
         }
     }
 }

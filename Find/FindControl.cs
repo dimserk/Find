@@ -36,6 +36,7 @@ namespace Find
 
             this.SearchResultDataGridView.SelectionChanged += Select_Cell;
             this.CaseCheckBox.CheckedChanged += Search_Option_Changed;
+            this.SearchCheckBox.CheckedChanged += Disable_Workbook_Search;
         }
 
         private void Search_Button_Click(object sender, EventArgs e)
@@ -117,6 +118,19 @@ namespace Find
             }
         }
 
+        private void SaveSheetButton_Click(object sender, EventArgs e)
+        {
+            Saver.SaveAsWorksheet("Резльтат поиска", ActiveWorkbook, this.SearchResultRanges);
+        }
+
+        private void SaveBookButton_Click(object sender, EventArgs e)
+        {
+            string workbookName = "";
+            string selectedPath = "";
+
+            Saver.SaveAsWorkbook(workbookName, selectedPath, this.SearchResultRanges);
+        }
+
         private void Select_Cell(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in this.SearchResultDataGridView.SelectedRows)
@@ -125,13 +139,23 @@ namespace Find
                 view.FoundRange.Worksheet.Activate();
                 view.FoundRange.Activate();
             }
-            //((RangeView)th.SelectedItem).FoundRange.Worksheet.Activate();
-            //((RangeView)CellsListBox.SelectedItem).FoundRange.Activate();
         }
 
         private void Search_Option_Changed(object sender, EventArgs e)
         {
             this.Searcher.CaseFlag = this.CaseCheckBox.Checked;
+        }
+
+        private void Disable_Workbook_Search(object sender, EventArgs e)
+        {
+            if (this.SearchCheckBox.Checked)
+            {
+                this.WorkbookCheckBox.Enabled = false;
+            }
+            else
+            {
+                this.WorkbookCheckBox.Enabled = true;
+            }
         }
     }
 }

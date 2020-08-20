@@ -19,6 +19,14 @@ namespace Find
 
         public void SearchInRange(string what, Range where, ref List<Range> searchResultRanges, ref BindingList<RangeView> searchResultList)
         {
+            // Debuging
+            string rangeArdesses = String.Empty;
+            foreach (Range cell in where.Cells)
+            {
+                rangeArdesses += $"{cell.Address} "; 
+            }
+            // Debuging
+
             var foundRange = where.Find(what, MatchCase:this.CaseFlag);
             var worksheetSearchResult = foundRange;
 

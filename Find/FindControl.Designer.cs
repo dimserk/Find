@@ -272,6 +272,7 @@
             this.SaveBookButton.TabIndex = 0;
             this.SaveBookButton.Text = "Сохранить как\r\nновая книга";
             this.SaveBookButton.UseVisualStyleBackColor = true;
+            this.SaveBookButton.Click += new System.EventHandler(this.SaveBookButton_Click);
             // 
             // SaveSheetButton
             // 
@@ -285,6 +286,7 @@
             this.SaveSheetButton.TabIndex = 1;
             this.SaveSheetButton.Text = "Сохранить как\r\nновый лист";
             this.SaveSheetButton.UseVisualStyleBackColor = true;
+            this.SaveSheetButton.Click += new System.EventHandler(this.SaveSheetButton_Click);
             // 
             // FindControl
             // 
