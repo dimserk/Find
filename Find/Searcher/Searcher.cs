@@ -36,7 +36,7 @@ namespace Find
                     }
                     catch (System.Runtime.InteropServices.COMException)
                     {
-                        break;
+                        return;
                     }
 
                     if (firstAddress != foundRange.Address)

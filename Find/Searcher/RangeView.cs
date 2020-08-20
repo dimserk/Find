@@ -11,9 +11,22 @@ namespace Find
     {
         public Range FoundRange;
 
+        public string SheetName { get; set; }
+
+        public string CellAddress { get; set; }
+
+        public string Text { get; set; }
+
         public RangeView(Range foundRange = null)
         {
             this.FoundRange = foundRange;
+            
+            if (this.FoundRange != null)
+            {
+                this.SheetName = this.FoundRange.Worksheet.Name;
+                this.CellAddress = this.FoundRange.Address.Replace("$", "");
+                this.Text = this.FoundRange.Text;
+            }
         }
 
         public override string ToString()

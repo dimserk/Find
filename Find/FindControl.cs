@@ -32,9 +32,9 @@ namespace Find
             this.SearchResultList = new BindingList<RangeView>();
             this.Searcher = new Searcher();
 
-            this.CellsListBox.DataSource = this.SearchResultList;
+            this.SearchResultDataGridView.DataSource = this.SearchResultList;
 
-            this.CellsListBox.SelectedIndexChanged += Select_Cell;
+            this.SearchResultDataGridView.SelectionChanged += Select_Cell;
             this.CaseCheckBox.CheckedChanged += Search_Option_Changed;
         }
 
@@ -42,19 +42,38 @@ namespace Find
         {
             if (!String.IsNullOrEmpty(SearchTextBox.Text))
             {
-                this.SearchResultRanges.Clear();
-                this.SearchResultList.Clear();
-
-                if (this.WorkbookCheckBox.Checked)
+                if (SearchCheckBox.Checked)
                 {
-                    foreach (Worksheet worksheet in ActiveWorkbook.Worksheets)
+                    List<Range> searchResultRangesCopy = new List<Range>();
+                    foreach (var range in this.SearchResultRanges)
                     {
-                        Searcher.SearchInRange(SearchTextBox.Text, worksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                        searchResultRangesCopy.Add(range);
+                    }
+
+                    this.SearchResultRanges.Clear();
+                    this.SearchResultList.Clear();
+
+                    foreach (var range in searchResultRangesCopy)
+                    {
+                        Searcher.SearchInRange(SearchTextBox.Text, range, ref SearchResultRanges, ref SearchResultList);
                     }
                 }
                 else
                 {
-                    Searcher.SearchInRange(SearchTextBox.Text, ActiveWorksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                    this.SearchResultRanges.Clear();
+                    this.SearchResultList.Clear();
+
+                    if (this.WorkbookCheckBox.Checked)
+                    {
+                        foreach (Worksheet worksheet in ActiveWorkbook.Worksheets)
+                        {
+                            Searcher.SearchInRange(SearchTextBox.Text, worksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                        }
+                    }
+                    else
+                    {
+                        Searcher.SearchInRange(SearchTextBox.Text, ActiveWorksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                    }
                 }
             }
             else
@@ -75,28 +94,11 @@ namespace Find
             }
         }
 
-        private void Clarify_Button_Click(object sender, EventArgs e)
+        private void ClearButton_Click(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(SearchTextBox.Text))
-            {
-                List<Range> searchResultRangesCopy = new List<Range>();
-                foreach (var range in this.SearchResultRanges)
-                {
-                    searchResultRangesCopy.Add(range);
-                }
-
-                this.SearchResultRanges.Clear();
-                this.SearchResultList.Clear();
-
-                foreach (var range in searchResultRangesCopy)
-                {
-                    Searcher.SearchInRange(SearchTextBox.Text, range, ref SearchResultRanges, ref SearchResultList);
-                }
-            }
-            else
-            {
-                return;
-            }
+            this.SearchTextBox.Text = String.Empty;
+            this.SearchResultRanges.Clear();
+            this.SearchResultList.Clear();
 
             Buttons_Status_Sub_Proc();
         }
@@ -107,23 +109,24 @@ namespace Find
             {
                 this.SaveBookButton.Enabled = true;
                 this.SaveSheetButton.Enabled = true;
-                this.ClarifyButton.Enabled = true;
             }
             else
             {
                 this.SaveBookButton.Enabled = false;
                 this.SaveSheetButton.Enabled = false;
-                this.ClarifyButton.Enabled = false;
             }
         }
 
         private void Select_Cell(object sender, EventArgs e)
         {
-            if (this.CellsListBox.SelectedIndex != -1)
+            foreach (DataGridViewRow row in this.SearchResultDataGridView.SelectedRows)
             {
-                ((RangeView)CellsListBox.SelectedItem).FoundRange.Worksheet.Activate();
-                ((RangeView)CellsListBox.SelectedItem).FoundRange.Activate();
+                var view = (RangeView)row.DataBoundItem;
+                view.FoundRange.Worksheet.Activate();
+                view.FoundRange.Activate();
             }
+            //((RangeView)th.SelectedItem).FoundRange.Worksheet.Activate();
+            //((RangeView)CellsListBox.SelectedItem).FoundRange.Activate();
         }
 
         private void Search_Option_Changed(object sender, EventArgs e)
