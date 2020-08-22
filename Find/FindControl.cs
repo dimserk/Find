@@ -120,7 +120,7 @@ namespace Find
 
         private void SaveSheetButton_Click(object sender, EventArgs e)
         {
-            Saver.SaveAsWorksheet("Резльтат поиска", ActiveWorkbook, this.SearchResultRanges);
+            Saver.SaveAsWorksheet("Результат поиска", ActiveWorkbook, this.SearchResultList);
         }
 
         private void SaveBookButton_Click(object sender, EventArgs e)
@@ -128,7 +128,7 @@ namespace Find
             string workbookName = "";
             string selectedPath = "";
 
-            Saver.SaveAsWorkbook(workbookName, selectedPath, this.SearchResultRanges);
+            Saver.SaveAsWorkbook(workbookName, ActiveWorkbook, selectedPath, this.SearchResultRanges);
         }
 
         private void Select_Cell(object sender, EventArgs e)
