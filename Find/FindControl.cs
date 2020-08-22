@@ -9,81 +9,153 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Excel;
-using Application = Microsoft.Office.Interop.Excel.Application;
 using System.IO;
+using System.Windows.Forms.VisualStyles;
 
 namespace Find
 {
-
     public partial class FindControl : UserControl
     {
+        private Workbook ActiveWorkbook => Globals.ThisAddIn.Application.ActiveWorkbook;
+        private Worksheet ActiveWorksheet => Globals.ThisAddIn.Application.ActiveSheet;
+
+        private List<Range> SearchResultRanges;
+        private BindingList<RangeView> SearchResultList;
+
+        private Searcher Searcher;
+
         public FindControl()
         {
             InitializeComponent();
-        }
-        private Application App => Globals.ThisAddIn.Application;
 
-        private void Search_button_Click(object sender, EventArgs e)
+            this.SearchResultRanges = new List<Range>();
+            this.SearchResultList = new BindingList<RangeView>();
+            this.Searcher = new Searcher();
+
+            this.SearchResultDataGridView.DataSource = this.SearchResultList;
+
+            this.SearchResultDataGridView.SelectionChanged += Select_Cell;
+            this.CaseCheckBox.CheckedChanged += Search_Option_Changed;
+            this.SearchCheckBox.CheckedChanged += Disable_Workbook_Search;
+        }
+
+        private void Search_Button_Click(object sender, EventArgs e)
         {
-            string search = Search_TextBox.Text;
-            MessageBox.Show(search);
+            if (!String.IsNullOrEmpty(SearchTextBox.Text))
+            {
+                if (SearchCheckBox.Checked)
+                {
+                    List<Range> searchResultRangesCopy = new List<Range>();
+                    foreach (var range in this.SearchResultRanges)
+                    {
+                        searchResultRangesCopy.Add(range);
+                    }
 
-            var wb = App.ActiveWorkbook;
-            var path = wb.FullName;     // возвращает имя книги  (Book5)
+                    this.SearchResultRanges.Clear();
+                    this.SearchResultList.Clear();
 
-            var activeSheet = (Worksheet)App.ActiveSheet;
+                    foreach (var range in searchResultRangesCopy)
+                    {
+                        Searcher.SearchInRange(SearchTextBox.Text, range, ref SearchResultRanges, ref SearchResultList);
+                    }
+                }
+                else
+                {
+                    this.SearchResultRanges.Clear();
+                    this.SearchResultList.Clear();
 
-            var pathSheet = activeSheet.Name;   // возвращает имя листа  (Sheet1)
-            var selection = (Range)App.Selection;
-            var allCells = activeSheet.Cells.Rows.EntireRow;
+                    if (this.WorkbookCheckBox.Checked)
+                    {
+                        foreach (Worksheet worksheet in ActiveWorkbook.Worksheets)
+                        {
+                            Searcher.SearchInRange(SearchTextBox.Text, worksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                        }
+                    }
+                    else
+                    {
+                        Searcher.SearchInRange(SearchTextBox.Text, ActiveWorksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                    }
+                }
+            }
+            else
+            {
+                return;
+            }
 
-            activeSheet.Cells[1, 1] = path;
-            activeSheet.Cells[2, 2] = pathSheet;
-
+            Buttons_Status_Sub_Proc();
         }
-        
+
         private void Search_TextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = e.KeyChar == (char)Keys.Enter;
 
             if (e.KeyChar == (char)Keys.Enter)
             {
-                Search_button_Click(sender, e);
+                Search_Button_Click(sender, e);
             }
         }
 
-        private void SaveBook_Button_Click(object sender, EventArgs e)
+        private void ClearButton_Click(object sender, EventArgs e)
         {
-            var wb = App.ActiveWorkbook;
-            string fileName = String.Empty;
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "xls files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-            saveFileDialog1.FilterIndex = 1;
-            saveFileDialog1.RestoreDirectory = true;
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-             {
-                fileName = saveFileDialog1.FileName;
-             }
-            else
-                return;
-            // сохраняем Workbook
-            wb.SaveAs(fileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-            saveFileDialog1.Dispose();
+            this.SearchTextBox.Text = String.Empty;
+            this.SearchResultRanges.Clear();
+            this.SearchResultList.Clear();
+
+            Buttons_Status_Sub_Proc();
         }
 
-        private void SaveSheet_Button_Click(object sender, EventArgs e)
+        private void Buttons_Status_Sub_Proc()
         {
-            var xlSheets = App.ActiveWorkbook.Sheets;
-            int count = App.ActiveWorkbook.Sheets.Count;
-            var activeSheet = (Worksheet)App.ActiveSheet;
+            if (this.SearchResultList.Count != 0)
+            {
+                this.SaveBookButton.Enabled = true;
+                this.SaveSheetButton.Enabled = true;
+            }
+            else
+            {
+                this.SaveBookButton.Enabled = false;
+                this.SaveSheetButton.Enabled = false;
+            }
+        }
 
-            var xlNewSheet = (Excel.Worksheet)xlSheets.Add(Type.Missing, activeSheet, Type.Missing, Type.Missing);  // добавляет лист после активного
-            // var xlNewSheet = (Excel.Worksheet)xlSheets.Add(xlSheets[1], Type.Missing, Type.Missing, Type.Missing); // добавляет лист в самом начале
-            // var xlNewSheet = (Excel.Worksheet)xlSheets.Add(Type.Missing, xlSheets[count], Type.Missing, Type.Missing); // добавляет лист в самом конце
+        private void SaveSheetButton_Click(object sender, EventArgs e)
+        {
+            Saver.SaveAsWorksheet("Результат поиска", ActiveWorkbook, this.SearchResultList);
+        }
 
-            // xlNewSheet.Name = "newsheet";  // название листа, который добавили
+        private void SaveBookButton_Click(object sender, EventArgs e)
+        {
+            string workbookName = "";
+            string selectedPath = "";
 
-            activeSheet.Cells[1, 1] = count;
+            Saver.SaveAsWorkbook(workbookName, ActiveWorkbook, selectedPath, this.SearchResultRanges);
+        }
+
+        private void Select_Cell(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in this.SearchResultDataGridView.SelectedRows)
+            {
+                var view = (RangeView)row.DataBoundItem;
+                view.FoundRange.Worksheet.Activate();
+                view.FoundRange.Activate();
+            }
+        }
+
+        private void Search_Option_Changed(object sender, EventArgs e)
+        {
+            this.Searcher.CaseFlag = this.CaseCheckBox.Checked;
+        }
+
+        private void Disable_Workbook_Search(object sender, EventArgs e)
+        {
+            if (this.SearchCheckBox.Checked)
+            {
+                this.WorkbookCheckBox.Enabled = false;
+            }
+            else
+            {
+                this.WorkbookCheckBox.Enabled = true;
+            }
         }
     }
 }
