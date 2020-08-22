@@ -9,13 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Interop.Excel;
-using Application = Microsoft.Office.Interop.Excel.Application;
 using System.IO;
 using System.Windows.Forms.VisualStyles;
 
 namespace Find
 {
-
     public partial class FindControl : UserControl
     {
         private Workbook ActiveWorkbook => Globals.ThisAddIn.Application.ActiveWorkbook;

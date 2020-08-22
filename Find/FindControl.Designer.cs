@@ -109,7 +109,7 @@
             this.TableLayout_Option.Controls.Add(this.CaseCheckBox, 0, 2);
             this.TableLayout_Option.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TableLayout_Option.Location = new System.Drawing.Point(3, 18);
-            this.TableLayout_Option.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TableLayout_Option.Margin = new System.Windows.Forms.Padding(2);
             this.TableLayout_Option.Name = "TableLayout_Option";
             this.TableLayout_Option.RowCount = 3;
             this.TableLayout_Option.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
@@ -174,7 +174,7 @@
             this.Search_Button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Search_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Search_Button.Location = new System.Drawing.Point(5, 5);
-            this.Search_Button.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.Search_Button.Margin = new System.Windows.Forms.Padding(5);
             this.Search_Button.Name = "Search_Button";
             this.Search_Button.Size = new System.Drawing.Size(182, 39);
             this.Search_Button.TabIndex = 1;
@@ -187,7 +187,7 @@
             this.ClearButton.AutoSize = true;
             this.ClearButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ClearButton.Location = new System.Drawing.Point(197, 5);
-            this.ClearButton.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.ClearButton.Margin = new System.Windows.Forms.Padding(5);
             this.ClearButton.Name = "ClearButton";
             this.ClearButton.Size = new System.Drawing.Size(183, 39);
             this.ClearButton.TabIndex = 3;
@@ -208,7 +208,7 @@
             this.Column3});
             this.SearchResultDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SearchResultDataGridView.Location = new System.Drawing.Point(2, 222);
-            this.SearchResultDataGridView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SearchResultDataGridView.Margin = new System.Windows.Forms.Padding(2);
             this.SearchResultDataGridView.Name = "SearchResultDataGridView";
             this.SearchResultDataGridView.ReadOnly = true;
             this.SearchResultDataGridView.RowHeadersVisible = false;
@@ -230,7 +230,7 @@
             // Column2
             // 
             this.Column2.DataPropertyName = "CellAddress";
-            this.Column2.HeaderText = "Ячека";
+            this.Column2.HeaderText = "Ячейка";
             this.Column2.MinimumWidth = 10;
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
@@ -252,7 +252,7 @@
             this.TableLayout_Save.Controls.Add(this.SaveSheetButton, 0, 0);
             this.TableLayout_Save.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TableLayout_Save.Location = new System.Drawing.Point(2, 474);
-            this.TableLayout_Save.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TableLayout_Save.Margin = new System.Windows.Forms.Padding(2);
             this.TableLayout_Save.Name = "TableLayout_Save";
             this.TableLayout_Save.RowCount = 1;
             this.TableLayout_Save.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -265,7 +265,7 @@
             this.SaveBookButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SaveBookButton.Enabled = false;
             this.SaveBookButton.Location = new System.Drawing.Point(198, 5);
-            this.SaveBookButton.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.SaveBookButton.Margin = new System.Windows.Forms.Padding(5);
             this.SaveBookButton.Name = "SaveBookButton";
             this.SaveBookButton.Size = new System.Drawing.Size(184, 43);
             this.SaveBookButton.TabIndex = 0;
@@ -279,7 +279,7 @@
             this.SaveSheetButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SaveSheetButton.Enabled = false;
             this.SaveSheetButton.Location = new System.Drawing.Point(5, 5);
-            this.SaveSheetButton.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.SaveSheetButton.Margin = new System.Windows.Forms.Padding(5);
             this.SaveSheetButton.Name = "SaveSheetButton";
             this.SaveSheetButton.Size = new System.Drawing.Size(183, 43);
             this.SaveSheetButton.TabIndex = 1;
