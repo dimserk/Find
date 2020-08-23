@@ -55,22 +55,53 @@ namespace Find
             }
         }
 
-        public static void SaveAsWorkbook(string workbookName, Workbook workbook, string path, List<Range> foundRanges)
+        public static void SaveAsWorkbook(BindingList<RangeView> foundRanges)
         {
-            string fileName;
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "xls files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-            saveFileDialog1.FilterIndex = 1;
-            saveFileDialog1.RestoreDirectory = true;
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            Microsoft.Office.Interop.Excel.Application ObjExcel = new Microsoft.Office.Interop.Excel.Application();
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                fileName = saveFileDialog1.FileName;
+                Filter = "xls files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
+                FilterIndex = 1,
+                RestoreDirectory = true
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Workbook newWorkbook = ObjExcel.Workbooks.Add(System.Reflection.Missing.Value);
+
+                Worksheet newSheet = (Worksheet)newWorkbook.Sheets[1];
+
+                newSheet.Cells[1, 1] = "Результат поиска:";
+                newSheet.Cells[2, 1] = "Лист";
+                newSheet.Cells[2, 2] = "Ячейка";
+                newSheet.Cells[2, 3] = "Текст";
+
+                int i = 3;
+                foreach (var range in foundRanges)
+                {
+                    newSheet.Cells[i, 1] = range.SheetName;
+                    newSheet.Cells[i, 2] = range.CellAddress;
+                    newSheet.Cells[i, 3] = range.Text;
+                    i++;
+                }
+                newSheet.Columns.AutoFit();
+
+                ObjExcel.Visible = true;
+                ObjExcel.UserControl = true;
+
+                newWorkbook.ActiveSheet.Name = "Результат поиска";
+
+                string workbookName = saveFileDialog.FileName;
+
+                newWorkbook.SaveAs(workbookName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                saveFileDialog.Dispose();
             }
             else
+            {
                 return;
-            // сохраняем Workbook
-            workbook.SaveAs(fileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-            saveFileDialog1.Dispose();
+            }
+
         }
     }
 }
