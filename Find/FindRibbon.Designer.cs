@@ -56,8 +56,11 @@
             // 
             // FindPane_ToggleButton
             // 
+            this.FindPane_ToggleButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.FindPane_ToggleButton.Image = global::Find.Properties.Resources.Icon_Find;
             this.FindPane_ToggleButton.Label = "Показать вкладку поиска";
             this.FindPane_ToggleButton.Name = "FindPane_ToggleButton";
+            this.FindPane_ToggleButton.ShowImage = true;
             this.FindPane_ToggleButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.FindPane_ToggleButton_Click);
             // 
             // FindRibbon

@@ -17,6 +17,8 @@ namespace Find
     public partial class FindControl : UserControl
     {
         private Workbook ActiveWorkbook => Globals.ThisAddIn.Application.ActiveWorkbook;
+
+        private Workbook Workbooks => (Workbook)Globals.ThisAddIn.Application.Workbooks;
         private Worksheet ActiveWorksheet => Globals.ThisAddIn.Application.ActiveSheet;
 
         private List<Range> SearchResultRanges;
@@ -125,10 +127,7 @@ namespace Find
 
         private void SaveBookButton_Click(object sender, EventArgs e)
         {
-            string workbookName = "";
-            string selectedPath = "";
-
-            Saver.SaveAsWorkbook(workbookName, ActiveWorkbook, selectedPath, this.SearchResultRanges);
+            Saver.SaveAsWorkbook(this.SearchResultList);
         }
 
         private void Select_Cell(object sender, EventArgs e)
