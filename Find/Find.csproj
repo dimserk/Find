@@ -199,6 +199,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Saver\Saver.cs" />
+    <Compile Include="Searcher\QueryParser.cs" />
     <Compile Include="Searcher\RangeView.cs" />
     <Compile Include="Searcher\Searcher.cs" />
     <Compile Include="ThisAddIn.cs">
