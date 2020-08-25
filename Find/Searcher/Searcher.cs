@@ -20,13 +20,10 @@ namespace Find
 
         public void SearchInRange(string what, Range where, ref List<Range> searchResultRanges, ref BindingList<RangeView> searchResultList)
         {
-            // Debuging
-            string rangeArdesses = String.Empty;
-            foreach (Range cell in where.Cells)
+            if (where == null)
             {
-                rangeArdesses += $"{cell.Address} ";
+                return;
             }
-            // Debuging
 
             bool notWordFlag;
             string firstAddress;
@@ -38,8 +35,14 @@ namespace Find
 
             foreach (var query in queries)
             {
-                currentFound = where.Find(query, MatchCase: this.CaseFlag);
                 firstAddress = String.Empty;
+                currentFound = where.Find(query, MatchCase: this.CaseFlag);
+
+                // Непонятная ошибка функцииFind при поиске в списке из одной клетки 
+                if (where.Cells.Count == 1 && where.Address != where.Cells[0].Address)
+                {
+                    continue;
+                }
 
                 while (currentFound != null)
                 {
@@ -74,9 +77,18 @@ namespace Find
                         }
                     }
 
-                    currentFound = where.FindNext(currentFound);
+                    try
+                    {
+                        currentFound = where.FindNext(currentFound);
+                    }
+                    catch (System.Runtime.InteropServices.COMException)
+                    {
+                        break;
+                    }
                 }
             }
+            
+            searchResultRanges.Add(worksheetSearchResult);
         }
     }
 }
