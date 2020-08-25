@@ -33,57 +33,98 @@ namespace Find
 
             parser.Parse(what, out queries, out notWords);
 
-            foreach (var query in queries)
+            if (queries.Count != 0)
             {
-                firstAddress = String.Empty;
-                currentFound = where.Find(query, MatchCase: this.CaseFlag);
-
-                // Непонятная ошибка функцииFind при поиске в списке из одной клетки 
-                if (where.Cells.Count == 1 && where.Address != where.Cells[0].Address)
+                foreach (var query in queries)
                 {
-                    continue;
-                }
+                    firstAddress = String.Empty;
+                    currentFound = where.Find(query, MatchCase: this.CaseFlag);
 
-                while (currentFound != null)
-                {
-                    if (firstAddress == String.Empty)
+                    // Непонятная ошибка функцииFind при поиске в списке из одной клетки 
+                    if (where.Cells.Count == 1 && where.Address != where.Cells[0].Address)
                     {
-                        firstAddress = currentFound.Address;
+                        continue;
                     }
-                    else
+
+                    while (currentFound != null)
                     {
-                        if (firstAddress == currentFound.Address)
+                        if (firstAddress == String.Empty)
+                        {
+                            firstAddress = currentFound.Address;
+                        }
+                        else
+                        {
+                            if (firstAddress == currentFound.Address)
+                            {
+                                break;
+                            }
+                        }
+
+                        notWordFlag = false;
+                        foreach (var notWord in notWords)
+                        {
+                            if (this.CaseFlag)
+                            {
+                                notWordFlag |= ((String)currentFound.Text).Contains(notWord);
+                            }
+                            else
+                            {
+                                notWordFlag |= ((String)currentFound.Text).ToLower().Contains(notWord.ToLower());
+                            }
+                        }
+
+                        if (!notWordFlag)
+                        {
+                            searchResultList.Add(new RangeView(currentFound));
+                            if (worksheetSearchResult == null)
+                            {
+                                worksheetSearchResult = currentFound;
+                            }
+                            else
+                            {
+                                worksheetSearchResult = Globals.ThisAddIn.Application.Union(worksheetSearchResult, currentFound);
+                            }
+                        }
+
+                        try
+                        {
+                            currentFound = where.FindNext(currentFound);
+                        }
+                        catch (System.Runtime.InteropServices.COMException)
                         {
                             break;
                         }
                     }
-
-                    notWordFlag = false;
+                }
+            }
+            else
+            {
+                foreach (Range cell in where.Cells)
+                {
                     foreach (var notWord in notWords)
                     {
-                        notWordFlag |= ((String)currentFound.Text).ToLower().Contains(notWord.ToLower());
-                    }
-
-                    if (!notWordFlag)
-                    {
-                        searchResultList.Add(new RangeView(currentFound));
-                        if (worksheetSearchResult == null)
+                        bool containsFlag = false;
+                        if (this.CaseFlag)
                         {
-                            worksheetSearchResult = currentFound;
+                            containsFlag = ((String)cell.Text).Contains(notWord);
                         }
                         else
                         {
-                            worksheetSearchResult = Globals.ThisAddIn.Application.Union(worksheetSearchResult, currentFound);
+                            containsFlag = ((String)cell.Text).ToLower().Contains(notWord.ToLower());
                         }
-                    }
 
-                    try
-                    {
-                        currentFound = where.FindNext(currentFound);
-                    }
-                    catch (System.Runtime.InteropServices.COMException)
-                    {
-                        break;
+                        if (!containsFlag)
+                        {
+                            searchResultList.Add(new RangeView(cell));
+                            if (worksheetSearchResult == null)
+                            {
+                                worksheetSearchResult = cell;
+                            }
+                            else
+                            {
+                                worksheetSearchResult = Globals.ThisAddIn.Application.Union(worksheetSearchResult, cell);
+                            }
+                        }
                     }
                 }
             }

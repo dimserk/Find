@@ -221,7 +221,7 @@
             this.SearchResultDataGridView.RowHeadersVisible = false;
             this.SearchResultDataGridView.RowHeadersWidth = 82;
             this.SearchResultDataGridView.RowTemplate.Height = 33;
-            this.SearchResultDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.SearchResultDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.SearchResultDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.SearchResultDataGridView.Size = new System.Drawing.Size(774, 477);
             this.SearchResultDataGridView.TabIndex = 10;

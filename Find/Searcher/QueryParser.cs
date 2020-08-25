@@ -6,7 +6,7 @@ namespace Find
     class QueryParser
     {
         private const char AndSplitter = ' ';
-        private const char OrSplitter = '/';
+        private const char OrSplitter = '\\';
         private const char NotSplitter = '-';
 
         private List<string> QueryList;
@@ -68,18 +68,31 @@ namespace Find
             // Формирование запроса с основными словами
             var preQuery = String.Join(" ", this.AndWords);
 
-            this.QueryList.Add(preQuery);
+            if (preQuery != String.Empty)
+            { 
+                this.QueryList.Add(preQuery);
+            }
 
-            // Формирование или запросов
+            // Формирование "или" запросов
             foreach (var orGroup in this.OrGroups)
             {
                 var newQueryList = new List<string>();
 
-                foreach (var query in this.QueryList)
+                if (this.QueryList.Count != 0)
+                {
+                    foreach (var query in this.QueryList)
+                    {
+                        foreach (var orWord in orGroup)
+                        {
+                            newQueryList.Add(String.Concat(query, orWord));
+                        }
+                    }
+                }
+                else
                 {
                     foreach (var orWord in orGroup)
                     {
-                        newQueryList.Add(String.Concat(query, orWord));
+                        newQueryList.Add(orWord);
                     }
                 }
 
