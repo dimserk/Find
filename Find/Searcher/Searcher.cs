@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Find
 {
@@ -23,41 +24,58 @@ namespace Find
             string rangeArdesses = String.Empty;
             foreach (Range cell in where.Cells)
             {
-                rangeArdesses += $"{cell.Address} "; 
+                rangeArdesses += $"{cell.Address} ";
             }
             // Debuging
 
-            var foundRange = where.Find(what, MatchCase:this.CaseFlag);
-            var worksheetSearchResult = foundRange;
+            bool notWordFlag;
+            string firstAddress;
+            Range worksheetSearchResult = null, currentFound;
+            QueryParser parser = new QueryParser();
+            List<string> queries, notWords;
 
-            if (foundRange != null)
+            parser.Parse(what, out queries, out notWords);
+
+            foreach (var query in queries)
             {
-                var firstAddress = foundRange.Address;
+                currentFound = where.Find(query, MatchCase: this.CaseFlag);
+                firstAddress = String.Empty;
 
-                while (true)
+                while (currentFound != null)
                 {
-                    searchResultList.Add(new RangeView(foundRange));
-
-                    try
-                    { 
-                        foundRange = where.FindNext(foundRange);
-                    }
-                    catch (System.Runtime.InteropServices.COMException)
+                    if (firstAddress == String.Empty)
                     {
-                        return;
-                    }
-
-                    if (firstAddress != foundRange.Address)
-                    {
-                        worksheetSearchResult = Globals.ThisAddIn.Application.Union(worksheetSearchResult, foundRange);
+                        firstAddress = currentFound.Address;
                     }
                     else
                     {
-                        break;
+                        if (firstAddress == currentFound.Address)
+                        {
+                            break;
+                        }
                     }
-                }
 
-                searchResultRanges.Add(worksheetSearchResult);
+                    notWordFlag = false;
+                    foreach (var notWord in notWords)
+                    {
+                        notWordFlag |= ((String)currentFound.Text).ToLower().Contains(notWord.ToLower());
+                    }
+
+                    if (!notWordFlag)
+                    {
+                        searchResultList.Add(new RangeView(currentFound));
+                        if (worksheetSearchResult == null)
+                        {
+                            worksheetSearchResult = currentFound;
+                        }
+                        else
+                        {
+                            worksheetSearchResult = Globals.ThisAddIn.Application.Union(worksheetSearchResult, currentFound);
+                        }
+                    }
+
+                    currentFound = where.FindNext(currentFound);
+                }
             }
         }
     }

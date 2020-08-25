@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace QueryAnalyzer
+namespace Find
 {
     class QueryParser
     {
         private const char AndSplitter = ' ';
-        private const char OrSplitter = '|';
+        private const char OrSplitter = '/';
         private const char NotSplitter = '-';
-        private const char ShouldSplitter = '?';
 
         private List<string> QueryList;
         private List<string> AndWords;
         private List<string[]> OrGroups;
         private List<string> NotWords;
-        private List<string> ShouldWords;
 
         public QueryParser()
         {
@@ -22,7 +20,6 @@ namespace QueryAnalyzer
             this.AndWords = new List<string>();
             this.OrGroups = new List<string[]>();
             this.NotWords = new List<string>();
-            this.ShouldWords = new List<string>();
         }
 
         public void Parse(string query, out List<string> queryList, out List<string> notWords)
@@ -49,13 +46,6 @@ namespace QueryAnalyzer
                     continue;
                 }
 
-                if (word[0] == ShouldSplitter)
-                {
-                    this.ShouldWords.Add(word.Remove(0, 1));
-
-                    continue;
-                }
-
                 this.AndWords.Add(word);
             }
 
@@ -71,7 +61,6 @@ namespace QueryAnalyzer
             this.AndWords.Clear();
             this.OrGroups.Clear();
             this.NotWords.Clear();
-            this.ShouldWords.Clear();
         }
 
         private void FormQueryList()
@@ -95,17 +84,6 @@ namespace QueryAnalyzer
                 }
 
                 this.QueryList = newQueryList;
-            }
-
-            // Формирование необязательных подзапросов
-            var copyQueryList = new List<string>(this.QueryList);
-
-            foreach (var shouldWord in this.ShouldWords)
-            {
-                foreach (var query in copyQueryList)
-                {
-                    this.QueryList.Add(String.Concat(query, shouldWord));   
-                }
             }
         }
     }
