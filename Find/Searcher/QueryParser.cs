@@ -33,7 +33,7 @@ namespace QueryAnalyzer
 
             foreach (var word in words)
             {
-                if (word.Contains(OrSplitter))
+                if (word.Contains(OrSplitter.ToString()))
                 {
                     var subWords = word.Split(OrSplitter);
 
@@ -77,7 +77,7 @@ namespace QueryAnalyzer
         private void FormQueryList()
         {
             // Формирование запроса с основными словами
-            var preQuery = String.Join(' ', this.AndWords);
+            var preQuery = String.Join(" ", this.AndWords);
 
             this.QueryList.Add(preQuery);
 
