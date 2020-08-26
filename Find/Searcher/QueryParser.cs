@@ -3,15 +3,18 @@ using System.Collections.Generic;
 
 namespace Find
 {
+    // Класс для разбора поискового запроса
     class QueryParser
     {
-        private const char AndSplitter = ' ';
-        private const char OrSplitter = '\\';
+        // Разделители слов
+        private const char AndSplitter = ' '; 
+        private const char OrSplitter = '|';
         private const char NotSplitter = '-';
 
-        private List<string> QueryList;
+        // Списки, задействуемые в процессе разбора запроса
+        private List<string> QueryList; // Список итоговых подзапросов
         private List<string> AndWords;
-        private List<string[]> OrGroups;
+        private List<string[]> OrGroups; // Массив строк, так как оператором ИЛИ могут быть объеденены много слов
         private List<string> NotWords;
 
         public QueryParser()
@@ -22,14 +25,19 @@ namespace Find
             this.NotWords = new List<string>();
         }
 
+        // Метод непосредственного разбора запроса
+        //  на вход подаётся строка с запросом
+        //  на выходе список подзапросов и список нежелательных слов
         public void Parse(string query, out List<string> queryList, out List<string> notWords)
         {
             this.ClearQuery();
 
+            // Разделение слов в запросе по оператору И
             var words = query.Split(AndSplitter);
 
             foreach (var word in words)
             {
+                // Обработка групп слов, объеденённых оператором ИЛИ
                 if (word.Contains(OrSplitter.ToString()))
                 {
                     var subWords = word.Split(OrSplitter);
@@ -38,7 +46,8 @@ namespace Find
 
                     continue;
                 }
-                
+
+                // Обработка нежелательных слов
                 if (word[0] == NotSplitter)
                 {
                     this.NotWords.Add(word.Remove(0, 1));
@@ -46,6 +55,7 @@ namespace Find
                     continue;
                 }
 
+                // Если слово не попало в предыдущие категории
                 this.AndWords.Add(word);
             }
 
@@ -55,6 +65,7 @@ namespace Find
             notWords = this.NotWords;
         }
 
+        // Подметод для очистки содержимого списков разбора
         private void ClearQuery()
         {
             this.QueryList.Clear();
@@ -63,25 +74,30 @@ namespace Find
             this.NotWords.Clear();
         }
 
+        // Подметод для формирования списка подзапросов
         private void FormQueryList()
         {
-            // Формирование запроса с основными словами
+            // Формирование запроса со словами, объединенными оператором И
             var preQuery = String.Join(" ", this.AndWords);
 
+            // Если И слов в запросе не было, то не добавляем пустой подзапрос в итоговый список
             if (preQuery != String.Empty)
             { 
                 this.QueryList.Add(preQuery);
             }
 
-            // Формирование "или" запросов
+            // Формирование ИЛИ запросов
             foreach (var orGroup in this.OrGroups)
             {
                 var newQueryList = new List<string>();
 
+                // Обработка случая с отсутвием И слов
                 if (this.QueryList.Count != 0)
                 {
+                    // Расширяем каждый запрос ИЛИ словами
                     foreach (var query in this.QueryList)
                     {
+                        // Каждая группа ИЛИ слов сливается с основными запросами
                         foreach (var orWord in orGroup)
                         {
                             newQueryList.Add(String.Concat(query, orWord));
@@ -90,12 +106,14 @@ namespace Find
                 }
                 else
                 {
+                    // Так как И слов нет, просто добавляем ИЛИ слова
                     foreach (var orWord in orGroup)
                     {
                         newQueryList.Add(orWord);
                     }
                 }
 
+                // Дополнение списка подзапросов ИЛИ подзапросами
                 this.QueryList = newQueryList;
             }
         }

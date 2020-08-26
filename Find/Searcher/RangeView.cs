@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace Find
 {
+    // Класс для отображения данных в таблице во вкладке
     class RangeView
     {
         public Range FoundRange;
+
+        // Имена SheetName, CellAddress и Text пропоисаны 
+        //  в полях таблице во вкладке
+        //  если менять их имена тут, то нужно соответсвенно поменять и в таблице
 
         public string SheetName { get; set; }
 
@@ -24,7 +29,7 @@ namespace Find
             if (this.FoundRange != null)
             {
                 this.SheetName = this.FoundRange.Worksheet.Name;
-                this.CellAddress = this.FoundRange.Address.Replace("$", "");
+                this.CellAddress = this.FoundRange.Address.Replace("$", ""); // Преобразование абсолютного адреса ячейки
                 this.Text = this.FoundRange.Text;
             }
         }
