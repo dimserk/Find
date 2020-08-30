@@ -33,10 +33,15 @@ namespace Find
             }
 
             bool notWordFlag;
-            string firstAddress;
+            string firstAddress, firstRangeAddress = String.Empty;
             Range worksheetSearchResult = null, currentFound;
             QueryParser parser = new QueryParser();
             List<string> queries, notWords;
+
+            if (where.Cells.Count == 1)
+            {
+                firstRangeAddress = where.Cells.Address;
+            }
 
             // Разбор запроса
             parser.Parse(what, out queries, out notWords);
@@ -50,16 +55,17 @@ namespace Find
                     firstAddress = String.Empty;
                     currentFound = where.Find(query, MatchCase: this.CaseFlag); // Штатаный поиск
 
-                    // !!!Костыль!!!
-                    // Непонятная ошибка функции Find при поиске в списке из одной клетки 
-                    if (where.Cells.Count == 1 && where.Address != where.Cells[0].Address)
-                    {
-                        continue;
-                    }
-
                     // Если что-то нашлось
                     while (currentFound != null)
                     {
+
+                        //// !!!Костыль!!!
+                        //// Непонятная ошибка функции Find при поиске в списке из одной клетки 
+                        if (where.Cells.Count == 1 && currentFound.Address != firstRangeAddress)
+                        {
+                            break;
+                        }
+
                         // Обработка адреса первой ячейки
                         if (firstAddress == String.Empty)
                         {
@@ -109,11 +115,11 @@ namespace Find
 
                         // Ищим следующую ячейку
                         //  при поиске в поиске могут возникать исключения в случае выборки из одной ячейки
-                        try
+                        if (where.Cells.Count != 1)
                         {
                             currentFound = where.FindNext(currentFound);
                         }
-                        catch (System.Runtime.InteropServices.COMException)
+                        else
                         {
                             break;
                         }
