@@ -34,13 +34,20 @@ namespace Find
 
             bool notWordFlag;
             string firstAddress, firstRangeAddress = String.Empty;
+            string addresses = String.Empty;
             Range worksheetSearchResult = null, currentFound;
             QueryParser parser = new QueryParser();
             List<string> queries, notWords;
 
+            // Подготовка переменных для обхода сраного бага
             if (where.Cells.Count == 1)
             {
                 firstRangeAddress = where.Cells.Address;
+
+                foreach (Range cell in where.Cells)
+                {
+                    addresses += $"{cell.Address} ";
+                }
             }
 
             // Разбор запроса
@@ -59,11 +66,22 @@ namespace Find
                     while (currentFound != null)
                     {
 
-                        //// !!!Костыль!!!
-                        //// Непонятная ошибка функции Find при поиске в списке из одной клетки 
-                        if (where.Cells.Count == 1 && currentFound.Address != firstRangeAddress)
+                        // !!!Костыль!!!
+                        // Непонятный баг функции Find при поиске в списке из одной клетки 
+                        if (where.Cells.Count == 1 && !addresses.Contains(currentFound.Address))
                         {
-                            break;
+                            try
+                            {
+                                currentFound = where.FindNext(currentFound);
+                            }
+                            catch(System.Runtime.InteropServices.COMException)
+                            {
+                                // Если при поиске в поиске пытаться найти значение которое 
+                                //  содержиться в ячейке на листе (или на другом листе) 
+                                //  перед найденой ячейкой, то результатом будет ничего
+                                currentFound = null;
+                            }
+                            continue;
                         }
 
                         // Обработка адреса первой ячейки

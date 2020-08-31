@@ -33,7 +33,7 @@ namespace Find
             this.ClearQuery();
 
             // Разделение слов в запросе по оператору И
-            var words = query.Split(AndSplitter);
+            var words = query.Trim(' ').Split(AndSplitter);
 
             foreach (var word in words)
             {
