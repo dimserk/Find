@@ -32,12 +32,124 @@ namespace Find
                 return;
             }
 
-            bool notWordFlag;
+            Range tmp = null, searchResult = null;
+            QueryParser parser = new QueryParser();
+
+            // Разбор запроса
+            //  результат разбора храниться в самом классе parser
+            parser.Parse(what);
+
+            Range orRange = null;
+            foreach (var orGroup in parser.OrGroups) // По каждой группе ИЛИ слов
+            {
+                orRange = null;
+
+                foreach (var orWord in orGroup) // По каждому слову в ИЛИ группе
+                {
+                    //  Получение всего найденного диапазона
+                    tmp = Search(where, orWord);
+
+                    if (tmp == null)
+                    {
+                        continue;
+                    }
+
+                    if (orRange == null)
+                    {
+                        orRange = tmp;
+                    }
+                    else
+                    {
+                        orRange = Globals.ThisAddIn.Application.Union(orRange, tmp);
+                    }
+                }
+            }
+
+            Range andRange = null;
+            if (orRange == null && parser.OrGroups.Count == 0)
+            {
+                andRange = where;
+            }
+            else
+            {
+                andRange = orRange;
+            }
+
+            searchResult = null;
+            foreach (var andWord in parser.AndWords)
+            {
+                tmp = Search(andRange, andWord);
+
+                if (tmp == null)
+                {
+                    continue;
+                }
+
+                if (searchResult == null)
+                {
+                    searchResult = tmp;
+                    andRange = tmp;
+                }
+                else
+                {
+                    searchResult = Globals.ThisAddIn.Application.Intersect(searchResult, tmp);
+                    andRange = searchResult;
+                }
+            }
+
+            bool notFlag;
+            Range res = null;
+            if (parser.NotWords.Count > 0 && searchResult != null)
+            {
+                foreach(Range cell in searchResult)
+                {
+                    notFlag = false;
+                    foreach (var notWord in parser.NotWords)
+                    {
+                        if (((string)cell.Text).Contains(notWord))
+                        {
+                            notFlag = true;
+                        }
+                    }
+
+                    if (!notFlag)
+                    {
+                        if (res == null)
+                        {
+                            res = cell;
+                        }
+                        else
+                        {
+                            res = Globals.ThisAddIn.Application.Union(res, cell);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                res = searchResult;
+            }
+
+            searchResultRanges.Add(res);
+            if (res != null)
+            {
+                foreach (Range range in res)
+                {
+                    searchResultList.Add(new RangeView(range));
+                }
+            }
+        } // SearchInRange
+
+        private Range Search(Range where, String what)
+        {
+            if (where == null)
+            {
+                return null;
+            }
+
             string firstAddress, firstRangeAddress = String.Empty;
             string addresses = String.Empty;
-            Range worksheetSearchResult = null, currentFound;
-            QueryParser parser = new QueryParser();
-            List<string> queries, notWords;
+            Range searchResult = null, currentFound;
 
             // Подготовка переменных для обхода сраного бага
             if (where.Cells.Count == 1)
@@ -50,139 +162,75 @@ namespace Find
                 }
             }
 
-            // Разбор запроса
-            parser.Parse(what, out queries, out notWords);
+            firstAddress = String.Empty;
+            currentFound = where.Find(what, MatchCase: this.CaseFlag); // Штатаный поиск
 
-            // Если в запросе присутсвуют опреаторы И или ИЛИ
-            if (queries.Count != 0)
+            // Если что-то нашлось
+            while (currentFound != null)
             {
-                // Обработка всех подзапросов по очереди
-                foreach (var query in queries)
+                // !!!Костыль!!!
+                // Непонятный баг функции Find при поиске в списке из одной клетки 
+                if (where.Cells.Count == 1 && !addresses.Contains(currentFound.Address))
                 {
-                    firstAddress = String.Empty;
-                    currentFound = where.Find(query, MatchCase: this.CaseFlag); // Штатаный поиск
-
-                    // Если что-то нашлось
-                    while (currentFound != null)
+                    try
                     {
-
-                        // !!!Костыль!!!
-                        // Непонятный баг функции Find при поиске в списке из одной клетки 
-                        if (where.Cells.Count == 1 && !addresses.Contains(currentFound.Address))
-                        {
-                            try
-                            {
-                                currentFound = where.FindNext(currentFound);
-                            }
-                            catch(System.Runtime.InteropServices.COMException)
-                            {
-                                // Если при поиске в поиске пытаться найти значение которое 
-                                //  содержиться в ячейке на листе (или на другом листе) 
-                                //  перед найденой ячейкой, то результатом будет ничего
-                                currentFound = null;
-                            }
-                            continue;
-                        }
-
-                        // Обработка адреса первой ячейки
-                        if (firstAddress == String.Empty)
-                        {
-                            // Запоминаем адрес первой найденой ячейки
-                            firstAddress = currentFound.Address;
-                        }
-                        else
-                        {
-                            // Выход из цикла когда резльтаты поиска пойдут по второму кругу
-                            //  (когда адрес вновь найденой ячейки совпадёт с первой найденной)
-                            if (firstAddress == currentFound.Address)
-                            {
-                                break;
-                            }
-                        }
-
-                        // Определение наличия нежелательных слов в поиске 
-                        notWordFlag = false;
-                        foreach (var notWord in notWords)
-                        {
-                            // В случае когда выставлен флаг учета регистра обрабатываем соотсветсвующим образом
-                            //  когда не выставлен, то обрабатываем без учёта регистра
-                            if (this.CaseFlag)
-                            {
-                                notWordFlag |= ((String)currentFound.Text).Contains(notWord);
-                            }
-                            else
-                            {
-                                notWordFlag |= ((String)currentFound.Text).ToLower().Contains(notWord.ToLower());
-                            }
-                        }
-
-                        // Если в ячейке не было найдено нежалательных слов, то заполняем список представлений
-                        //  и формируем общую выборку найденных ячеек
-                        if (!notWordFlag)
-                        {
-                            searchResultList.Add(new RangeView(currentFound));
-                            if (worksheetSearchResult == null)
-                            {
-                                worksheetSearchResult = currentFound;
-                            }
-                            else
-                            {
-                                worksheetSearchResult = Globals.ThisAddIn.Application.Union(worksheetSearchResult, currentFound);
-                            }
-                        }
-
-                        // Ищим следующую ячейку
-                        //  при поиске в поиске могут возникать исключения в случае выборки из одной ячейки
-                        if (where.Cells.Count != 1)
-                        {
-                            currentFound = where.FindNext(currentFound);
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        currentFound = where.FindNext(currentFound);
                     }
+                    catch (System.Runtime.InteropServices.COMException)
+                    {
+                        // Если при поиске в поиске пытаться найти значение которое 
+                        //  содержиться в ячейке на листе (или на другом листе) 
+                        //  перед найденой ячейкой, то результатом будет ничего
+                        currentFound = null;
+                    }
+                    continue;
+                }
+
+                // Критерий остановки поиска
+                if (firstAddress == String.Empty)
+                {
+                    // Запоминаем адрес первой найденой ячейки
+                    firstAddress = currentFound.Address;
+                }
+                else
+                {
+                    // Выход из цикла когда резльтаты поиска пойдут по второму кругу
+                    //  (когда адрес вновь найденой ячейки совпадёт с первой найденной)
+                    if (firstAddress == currentFound.Address)
+                    {
+                        break;
+                    }
+                }
+
+                if (searchResult == null)
+                {
+                    searchResult = currentFound;
+                }
+                else
+                {
+                    searchResult = Globals.ThisAddIn.Application.Union(searchResult, currentFound);
+                }
+
+                // Ищим следующую ячейку
+                //  при поиске в поиске могут возникать исключения в случае выборки из одной ячейки
+                if (where.Cells.Count != 1)
+                {
+                    try
+                    {
+                        currentFound = where.FindNext(currentFound);
+                    }
+                    catch (System.Runtime.InteropServices.COMException)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
                 }
             }
 
-            // Если в поисковом запросе присутвовали только операторы НЕ
-            else
-            {
-                foreach (Range cell in where.Cells)
-                {
-                    foreach (var notWord in notWords)
-                    {
-                        // В соответсвии с флагом учёта регистра ищем нежалетельные слова в ячейке
-                        bool containsFlag = false;
-                        if (this.CaseFlag)
-                        {
-                            containsFlag = ((String)cell.Text).Contains(notWord);
-                        }
-                        else
-                        {
-                            containsFlag = ((String)cell.Text).ToLower().Contains(notWord.ToLower());
-                        }
-
-                        // Если в ячейке не было найдено нежалательных слов, то заполняем список представлений
-                        //  и формируем общую выборку найденных ячеек
-                        if (!containsFlag)
-                        {
-                            searchResultList.Add(new RangeView(cell));
-                            if (worksheetSearchResult == null)
-                            {
-                                worksheetSearchResult = cell;
-                            }
-                            else
-                            {
-                                worksheetSearchResult = Globals.ThisAddIn.Application.Union(worksheetSearchResult, cell);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Для каждого обработанного листа заполняем список найденных ячеек
-            searchResultRanges.Add(worksheetSearchResult);
-        }
+            return searchResult;
+        } // Search
     }
 }
