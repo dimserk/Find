@@ -27,18 +27,18 @@ namespace Find
         //   если на листе ничего не было найдено, то в качестве результата заносится null 
         public void SearchInRange(string what, Range where, ref List<Range> searchResultRanges, ref BindingList<RangeView> searchResultList)
         {
+            // Бывают и такие ситуации
             if (where == null)
             {
                 return;
             }
 
-            Range tmp = null, searchResult = null;
-            QueryParser parser = new QueryParser();
-
             // Разбор запроса
             //  результат разбора храниться в самом классе parser
+            QueryParser parser = new QueryParser();
             parser.Parse(what);
 
+            Range tmp = null, searchResult = null;
             Range orRange = null;
             foreach (var orGroup in parser.OrGroups) // По каждой группе ИЛИ слов
             {
@@ -130,6 +130,7 @@ namespace Find
                 res = searchResult;
             }
 
+            // Формирование выходных значений метода
             searchResultRanges.Add(res);
             if (res != null)
             {
@@ -140,8 +141,11 @@ namespace Find
             }
         } // SearchInRange
 
+        // Подметод для получения диапазона найденных значений
+        //  поиск осуществляется в указанном диапазоне (1 параметр)
         private Range Search(Range where, String what)
         {
+            // Иногда возникают и такие ситуации
             if (where == null)
             {
                 return null;
@@ -202,6 +206,7 @@ namespace Find
                     }
                 }
 
+                // Формирование результирующего диапазона найденных ячеек
                 if (searchResult == null)
                 {
                     searchResult = currentFound;
@@ -213,8 +218,8 @@ namespace Find
 
                 // Ищим следующую ячейку
                 //  при поиске в поиске могут возникать исключения в случае выборки из одной ячейки
-                if (where.Cells.Count != 1)
-                {
+                //if (where.Cells.Count != 1)
+                //{
                     try
                     {
                         currentFound = where.FindNext(currentFound);
@@ -223,11 +228,11 @@ namespace Find
                     {
                         break;
                     }
-                }
-                else
-                {
-                    break;
-                }
+                //}
+                //else
+                //{
+                //    break;
+                //}
             }
 
             return searchResult;
