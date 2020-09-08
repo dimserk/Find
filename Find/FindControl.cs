@@ -28,6 +28,7 @@ namespace Find
         private BindingList<RangeView> SearchResultList; // Списк представлений найденных ячеек для таблицы во вкладке
 
         private Searcher Searcher; // Класс, реализующий поиск
+        private Saver Saver;
 
         public FindControl()
         {
@@ -36,6 +37,7 @@ namespace Find
             this.SearchResultRanges = new List<Range>();
             this.SearchResultList = new BindingList<RangeView>();
             this.Searcher = new Searcher();
+            this.Saver = new Saver();
 
             // Привязка списка представлений к таблице
             this.SearchResultDataGridView.DataSource = this.SearchResultList;
@@ -43,6 +45,7 @@ namespace Find
             // Привязка обработчиков событий
             this.SearchResultDataGridView.SelectionChanged += Select_Cell;
             this.CaseCheckBox.CheckedChanged += Search_Option_Changed;
+            this.RowSaveCheckBox.CheckedChanged += RowSave_Option_Changed;
             this.SearchCheckBox.CheckedChanged += Disable_Workbook_Search;
         }
 
@@ -149,12 +152,12 @@ namespace Find
 
         private void SaveSheetButton_Click(object sender, EventArgs e)
         {
-            Saver.SaveAsWorksheet("Результат поиска", ActiveWorkbook, this.SearchResultList);
+            this.Saver.SaveAsWorksheet(this.SearchResultList.ToList());
         }
 
         private void SaveBookButton_Click(object sender, EventArgs e)
         {
-            Saver.SaveAsWorkbook(this.SearchResultList);
+            this.Saver.SaveAsWorkbook(this.SearchResultList.ToList());
         }
 
         // Подметод для выделения выбранной в таблице ячейки в самом документе
@@ -172,6 +175,11 @@ namespace Find
         private void Search_Option_Changed(object sender, EventArgs e)
         {
             this.Searcher.CaseFlag = this.CaseCheckBox.Checked;
+        }
+
+        private void RowSave_Option_Changed(object sender, EventArgs e)
+        {
+            this.Saver.rowSave = this.RowSaveCheckBox.Checked;
         }
 
         // Подметод для игнорирования поиска по всей книге в случае, когда выбран поиск по поиску

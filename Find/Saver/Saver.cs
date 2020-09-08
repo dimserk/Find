@@ -7,101 +7,90 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Application = Microsoft.Office.Interop.Excel.Application;
 
 namespace Find
 {
     class Saver
     {
+        private Application App => Globals.ThisAddIn.Application;
 
-        public static bool ShExist(object wbP, string sShName) // проверка на наличие Листа в книге 
+        public bool rowSave; // Флаг сохранения строк целиком
+
+        public Saver()
         {
-            bool bEx = false;
-            object wsPShts = null, wsSh = null;
-            wsPShts = wbP.GetType().InvokeMember("Worksheets", System.Reflection.BindingFlags.GetProperty, null, wbP, null);
-            try
-            {
-                wsSh = wsPShts.GetType().InvokeMember("Item", System.Reflection.BindingFlags.GetProperty, null, wsPShts, new object[] { sShName });
-                bEx = true;
-            }
-            catch { bEx = false; }
-            return (bEx);
+            this.rowSave = false; // Значение по умолчанию
         }
 
-        public static void SaveAsWorksheet(string workSheetName, Workbook workbook, BindingList<RangeView> foundRanges)
+        // Подметод для сохранения списка представлений найденных ячеек на заданном листе
+        private void SaveOnWorksheet(ref Worksheet worksheet, ref List<RangeView> ranges)
         {
-            if (ShExist(workbook, "Результат поиска") == false)
-            {   //Создаем лист, если лист с таким именем отсутствует
-                var newSheet = workbook.Worksheets.Add(Type.Missing, workbook.ActiveSheet, Type.Missing, Type.Missing);
-                workbook.ActiveSheet.Name = workSheetName;
+            // Заполнение шапки
 
-                newSheet.Cells[1, 1] = "Результат поиска:";
-                newSheet.Cells[2, 1] = "Лист";
-                newSheet.Cells[2, 2] = "Ячейка";
-                newSheet.Cells[2, 3] = "Текст";
-
-                int i = 3;
-                foreach (var range in foundRanges)
-                {
-                    newSheet.Cells[i, 1] = range.SheetName;
-                    newSheet.Cells[i, 2] = range.CellAddress;
-                    newSheet.Cells[i, 3] = range.Text;
-                    i++;
-                }
-                newSheet.Columns.AutoFit();
+            worksheet.Cells[1, 1] = "Результат поиска:";
+            worksheet.Cells[2, 1] = "Лист";
+            worksheet.Cells[2, 2] = "Ячейка";
+            if (this.rowSave)
+            {
+                worksheet.Cells[2, 3] = "Строка";
             }
             else
             {
-                MessageBox.Show("Такой лист существует");
+                worksheet.Cells[2, 3] = "Текст";
             }
+
+            // Заполнение значений
+
+            int i = 3;
+            foreach (var cell in ranges)
+            {
+                worksheet.Cells[i, 1] = cell.SheetName;
+                worksheet.Cells[i, 2] = cell.CellAddress;
+
+                if (this.rowSave)
+                {
+                    // Сохранение строк целиком
+
+                    // Получение кол-ва задействованных столбцов и номера строки
+                    int columnMaxNum = cell.FoundRange.Worksheet.UsedRange.Columns.Count;
+                    int rowNum = cell.FoundRange.Row;
+
+                    // Заполнение 
+                    for (int k = 0; k < columnMaxNum; k++)
+                    {
+                        worksheet.Cells[i, 3 + k] = cell.FoundRange.Worksheet.Cells[rowNum, k + 1];
+                    }
+                }
+                else
+                {
+                    // Сохранение значений
+
+                    worksheet.Cells[i, 3] = cell.Text;
+                }
+
+                i++;
+            }
+
+            worksheet.Columns.AutoFit();
         }
 
-        public static void SaveAsWorkbook(BindingList<RangeView> foundRanges)
+        public void SaveAsWorksheet(List<RangeView> foundRanges)
         {
-            Microsoft.Office.Interop.Excel.Application ObjExcel = new Microsoft.Office.Interop.Excel.Application();
+            // Создание нового листа в текущей книге и переключение на него
+            var newSheet = (Worksheet)App.Worksheets.Add(After:App.ActiveWorkbook.Sheets[App.ActiveWorkbook.Worksheets.Count]);
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                Filter = "xls files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
-                FilterIndex = 1,
-                RestoreDirectory = true
-            };
+            this.SaveOnWorksheet(ref newSheet, ref foundRanges);
+        }
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                Workbook newWorkbook = ObjExcel.Workbooks.Add(System.Reflection.Missing.Value);
+        public void SaveAsWorkbook(List<RangeView> foundRanges)
+        {
+            // Создание новой книги с переключением на неё
+            var newWorkbook = App.Workbooks.Add();
 
-                Worksheet newSheet = (Worksheet)newWorkbook.Sheets[1];
+            // Получение первого листа в созданной книге
+            var newSheet = (Worksheet)newWorkbook.Sheets[1];
 
-                newSheet.Cells[1, 1] = "Результат поиска:";
-                newSheet.Cells[2, 1] = "Лист";
-                newSheet.Cells[2, 2] = "Ячейка";
-                newSheet.Cells[2, 3] = "Текст";
-
-                int i = 3;
-                foreach (var range in foundRanges)
-                {
-                    newSheet.Cells[i, 1] = range.SheetName;
-                    newSheet.Cells[i, 2] = range.CellAddress;
-                    newSheet.Cells[i, 3] = range.Text;
-                    i++;
-                }
-                newSheet.Columns.AutoFit();
-
-                ObjExcel.Visible = true;
-                ObjExcel.UserControl = true;
-
-                newWorkbook.ActiveSheet.Name = "Результат поиска";
-
-                string workbookName = saveFileDialog.FileName;
-
-                newWorkbook.SaveAs(workbookName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-                saveFileDialog.Dispose();
-            }
-            else
-            {
-                return;
-            }
-
+            this.SaveOnWorksheet(ref newSheet, ref foundRanges);
         }
     }
 }

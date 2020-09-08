@@ -26,10 +26,6 @@ namespace Find
             findControl = new FindControl();
             customFindTaskPane = this.CustomTaskPanes.Add(findControl, "Поиск");
             customFindTaskPane.VisibleChanged += new EventHandler(VisibleChanged);
-
-            // Debug 
-            Globals.Ribbons.FindRibbon.FindPane_ToggleButton.Checked = true;
-            this.customFindTaskPane.Visible = true;
         }
 
         private void ThisAddIn_Shutdown(object sender, EventArgs e)
