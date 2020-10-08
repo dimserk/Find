@@ -22,6 +22,14 @@ namespace Find
 
         public string Text { get; set; }
 
+        public RangeView(string sheetName, string cellAddress, string text, Range foundRange)
+        {
+            this.SheetName = sheetName;
+            this.CellAddress = cellAddress;
+            this.Text = text;
+            this.FoundRange = foundRange;
+        }
+
         public RangeView(Range foundRange = null)
         {
             this.FoundRange = foundRange;

@@ -21,12 +21,12 @@ namespace Find
             this.CaseFlag = false;
         }
 
-        // Метод поиска в диапазоне ячеек
+        // Метод поиска ячеек в диапазоне ячеек
         //  на входе запрос, диапазон ячеек в которых будет производиться поиск, ссылка на список диапазонов и ссылка на список представлений ячеек
         //  на выходе заполненные по резальтатам поиска списки диапазонов и представлений
         //   список диапазонов заполняется для каждого листа (0ой диапазон - 1 лист, 1ый диапазон - 2 лист и тд)
         //   если на листе ничего не было найдено, то в качестве результата заносится null 
-        public void SearchInRange(string what, Range where, ref List<Range> searchResultRanges, ref BindingList<RangeView> searchResultList)
+        public void SearchCellsInRange(string what, Range where, ref List<Range> searchResultRanges, ref BindingList<RangeView> searchResultList)
         {
             // Бывают и такие ситуации
             if (where == null)
@@ -138,7 +138,89 @@ namespace Find
                     searchResultList.Add(new RangeView(cell));
                 }
             }
-        } // SearchInRange
+        } // SearchCellsInRange
+
+        // Метод поиска строк в диапазоне строк
+        //  на входе запрос, диапазон ячеек(строк) в которых будет производиться поиск, ссылка на список диапазонов и ссылка на список представлений ячеек
+        //  на выходе заполненные по резальтатам поиска списки диапазонов и представлений
+        //   список диапазонов заполняется для каждого листа (0ой диапазон - 1 лист, 1ый диапазон - 2 лист и тд)
+        //   если на листе ничего не было найдено, то в качестве результата заносится null 
+        public void SearchRowsInRange(string what, Range where, ref List<Range> searchResultRanges, ref BindingList<RangeView> searchResultList)
+        {
+            // Бывают и такие ситуации
+            if (where == null)
+            {
+                return;
+            }
+
+            // Разбор запроса
+            //  результат разбора храниться в самом классе parser
+            QueryParser parser = new QueryParser();
+            parser.Parse(what);
+
+            bool goodRow = true, tmpFlag;
+            Range tmpFound = null;
+
+            // Усуществление поиска групп ИЛИ слов
+            foreach (var orGroup in parser.OrGroups)
+            {
+                tmpFlag = false;
+                foreach (var orWord in orGroup)
+                {
+                    tmpFound = Search(ref where, orWord);
+                    if (tmpFound != null)
+                    {
+                        tmpFlag |= true;
+                    }
+                }
+                goodRow &= tmpFlag;
+            }
+
+            // Поиск И слов, при их наличии
+            foreach (var andWord in parser.AndWords)
+            {
+                tmpFound = Search(ref where, andWord);
+                if (tmpFound == null)
+                {
+                    goodRow &= false;
+                }
+            }
+
+            // Обработка НЕ слов
+            foreach (var notWord in parser.NotWords)
+            {
+                tmpFound = Search(ref where, notWord);
+                if (tmpFound != null)
+                {
+                    goodRow &= false;
+                }
+            }
+
+            // Формирование выходных значений метода
+            if (goodRow)
+            {
+                searchResultRanges.Add(where);
+
+                int columnNum = where.Columns.Count;
+                
+                string address = $"{((Range)where.Cells[1,1]).Address.Replace("$", "")}:" +
+                    $"{((Range)where.Cells[1,columnNum]).Address.Replace("$", "")}";
+
+                int catColumns = 3;
+                List<string> textes = new List<string>();
+                if (columnNum < catColumns)
+                {
+                    catColumns = columnNum;
+                }
+                for (int i = 1; i <= catColumns; i++)
+                {
+                    textes.Add(((Range)where.Cells[1, i]).Text);
+                }
+
+                string fullText = String.Join(",", textes.ToArray()) + "...";
+                searchResultList.Add(new RangeView(where.Worksheet.Name, address, fullText, where));
+            }
+        } // SearchRowsInRange
 
         // Подметод для получения диапазона найденных значений
         //  поиск осуществляется в указанном диапазоне (первый параметр)

@@ -54,6 +54,8 @@ namespace Find
             // В случае когда в строку поиска введено что-то
             if (!String.IsNullOrEmpty(SearchTextBox.Text))
             {
+                //var d = Globals.Ribbons.FindRibbon.RowFlag;
+
                 // Обработка флага поиска в поиске
                 if (SearchCheckBox.Checked)
                 {
@@ -72,7 +74,16 @@ namespace Find
                     // Для каждого листа ищем в найденных на нём ячейках
                     foreach (var range in searchResultRangesCopy)
                     {
-                        Searcher.SearchInRange(SearchTextBox.Text, range, ref SearchResultRanges, ref SearchResultList);
+                        if (Globals.Ribbons.FindRibbon.RowFlag)
+                        {
+                            // Поиск по строкам
+                            Searcher.SearchRowsInRange(SearchTextBox.Text, range, ref SearchResultRanges, ref SearchResultList);
+                        }
+                        else
+                        {
+                            // Поиск по ячейкам
+                            Searcher.SearchCellsInRange(SearchTextBox.Text, range, ref SearchResultRanges, ref SearchResultList);
+                        }
                     }
                 }
                 else
@@ -89,14 +100,41 @@ namespace Find
 
                         foreach (Worksheet worksheet in ActiveWorkbook.Worksheets)
                         {
-                            Searcher.SearchInRange(SearchTextBox.Text, worksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                            if (Globals.Ribbons.FindRibbon.RowFlag)
+                            {
+                                // Поиск по строкам
+
+                                List<Range> rows = GetRows(worksheet.UsedRange);
+                                foreach (var row in rows)
+                                {
+                                    Searcher.SearchRowsInRange(SearchTextBox.Text, row, ref SearchResultRanges, ref SearchResultList);
+                                }
+                            }
+                            else
+                            {
+                                // Поиск по ячейкам
+                                Searcher.SearchCellsInRange(SearchTextBox.Text, worksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                            }
                         }
                     }
                     else
                     {
                         // Поиск на текущем листе
 
-                        Searcher.SearchInRange(SearchTextBox.Text, ActiveWorksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                        if (Globals.Ribbons.FindRibbon.RowFlag)
+                        {
+                            // Поиск по строкам
+                            List<Range> rows = GetRows(ActiveWorksheet.UsedRange);
+                            foreach (var row in rows)
+                            {
+                                Searcher.SearchRowsInRange(SearchTextBox.Text, row, ref SearchResultRanges, ref SearchResultList);
+                            }
+                        }
+                        else
+                        {
+                            // Поиск по ячейкам
+                            Searcher.SearchCellsInRange(SearchTextBox.Text, ActiveWorksheet.UsedRange, ref SearchResultRanges, ref SearchResultList);
+                        }
                     }
                 }
             }
@@ -199,6 +237,21 @@ namespace Find
 
                 this.WorkbookCheckBox.Enabled = true;
             }
+        }
+
+        private List<Range> GetRows(Range table)
+        {
+            Worksheet worksheet = table.Worksheet;
+            List<Range> rows = new List<Range>();
+
+            int maxColumns = table.Columns.Count;
+
+            for (int i = 1; i <= table.Rows.Count; i++)
+            {
+                rows.Add(worksheet.Range[worksheet.Cells[i, 1], worksheet.Cells[i, maxColumns]]);
+            }
+
+            return rows;
         }
     }
 }
