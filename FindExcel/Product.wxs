@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="FindExcel" Language="1033" Version="1.0.0.0" Manufacturer="TarasovAlex" UpgradeCode="306a32cf-f931-4584-9e78-c02f6de22e90">
+  <Product Id="*" Name="FindExcel" Language="1049" Version="1.0.1" Manufacturer="TarasovAlex" UpgradeCode="306a32cf-f931-4584-9e78-c02f6de22e90">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -82,7 +82,7 @@
         <Component Id="Registry_LoadBehavior">
           <RegistryValue Id="RegKey_LoadBehavior" Root="HKCU"
                          Key="Software\Microsoft\Office\Excel\AddIns\Find"
-                         Name="LoadBehavior" Value="3"
+                         Name="LoadBehavior" Value="9"
                          Type="integer" KeyPath="yes" />
         </Component>
 
