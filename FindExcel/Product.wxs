@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="FindExcel" Language="1033" Version="1.0.0.0" Manufacturer="TarasovAlex" UpgradeCode="306a32cf-f931-4584-9e78-c02f6de22e90">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+    <!-- Verify if VSTO Office Runtime is installed -->
+    <Property Id="VSTORUNTIMEREDIST">
+      <RegistrySearch
+        Id="VSTORuntimeRedist"
+        Root="HKLM"
+        Key="SOFTWARE\Microsoft\VSTO Runtime Setup\v4R"
+        Name="Version"
+        Type="raw" />
+    </Property>
+
+    <Condition
+      Message="Инструменты Visual Studio 2010 для среды выполнения Office не установлены. Пожалуйста, скачайте и установите с сайта - https://www.microsoft.com/ru-ru/download/details.aspx?id=48217">
+      <![CDATA[Installed OR VSTORUNTIMEREDIST>="10.0.30319"]]>
+    </Condition>
+
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <Condition Message="Для этого приложения требуется .NET Framework 4.0. Пожалуйста, скачайте и установите с сайта - https://dotnet.microsoft.com/download/dotnet-framework/net40">
+      <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
+    </Condition>
+
+    <Media Id="1" Cabinet="FindSetup.cab" EmbedCab="yes"/>
+
+    <Feature Id="ProductFeature" Title="FindSetup" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+
+      <ComponentRef Id="Registry_FriendlyName" />
+      <ComponentRef Id="Registry_Description" />
+      <ComponentRef Id="Registry_Manifest" />
+      <ComponentRef Id="Registry_LoadBehavior" />
+
+    </Feature>
+
+    <!--Specify that the WiXUI_Minimal UI should be used, i.e, the simplest UI available -->
+    <UIRef Id="WixUI_Minimal" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <WixVariable Id="WixUIBannerBmp" Value="null.bmp" />
+    <WixVariable Id="WixUILicenseRtf" Value="EULA.rtf" />
+    <WixVariable Id="WixUIDialogBmp" Value="excel1.bmp" />
+
+    <!--
+    <WixVariable Id="WixUIExclamationIco" Value="icon.ico" />
+    <WixVariable Id="WixUIInfoIco" Value="icon.ico" />
+    <WixVariable Id="WixUINewIco" Value="icon.ico" />
+    <WixVariable Id="WixUIUpIco" Value="icon.ico" />
+    -->
+
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="FindSetup" />
+
+        <Component Id="Registry_FriendlyName">
+          <RegistryValue Id="RegKey_FriendlyName" Root="HKCU"
+                         Key="Software\Microsoft\Office\Excel\AddIns\Find"
+                         Name="FriendlyName"
+                         Value="Find"
+                         Type="string" KeyPath="yes" />
+        </Component>
+        <Component Id="Registry_Description">
+          <RegistryValue Id="RegKey_Description" Root="HKCU"
+                         Key="Software\Microsoft\Office\Excel\AddIns\Find"
+                         Name="Description"
+                         Value="Multilevel search engine tool."
+                         Type="string" KeyPath="yes" />
+        </Component>
+        <Component Id="Registry_Manifest">
+          <RegistryValue Id="RegKey_Manifest" Root="HKCU"
+                         Key="Software\Microsoft\Office\Excel\AddIns\Find"
+                         Name="Manifest" Value="[INSTALLFOLDER]Find.vsto|vstolocal"
+                         Type="string" KeyPath="yes" />
+        </Component>
+        <Component Id="Registry_LoadBehavior">
+          <RegistryValue Id="RegKey_LoadBehavior" Root="HKCU"
+                         Key="Software\Microsoft\Office\Excel\AddIns\Find"
+                         Name="LoadBehavior" Value="3"
+                         Type="integer" KeyPath="yes" />
+        </Component>
+
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+
+      <Component Id="MSOfficeToolsCommon_dll_Component">
+        <File Id="MSOfficeToolsCommon_dll" KeyPath="yes"
+          Name="Microsoft.Office.Tools.Common.v4.0.Utilities.dll"
+          Source="$(var.AddinFiles)"></File>
+      </Component>
+
+      <Component Id="Find_dll_Component" >
+        <File Id="Find_dll" KeyPath="yes"
+              Name="Find.dll"
+              Source="$(var.AddinFiles)" />
+      </Component>
+
+      <Component Id="Find_vsto_Component">
+        <File Id="Find_vsto" KeyPath="yes"
+          Name="Find.vsto"
+          Source="$(var.AddinFiles)"></File>
+      </Component>
+
+      <Component Id="Find_dll_manifest_Component">
+        <File Id="Find_dll_manifest" KeyPath="yes"
+          Name="Find.dll.manifest"
+          Source="$(var.AddinFiles)"></File>
+      </Component>
+
+    </ComponentGroup>
+  </Fragment>
+</Wix>
